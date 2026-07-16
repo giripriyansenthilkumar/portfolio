@@ -8,6 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<!-- Three.js importmap for bare specifier resolution -->
+<script type="importmap">
+{"imports":{"three":"https://esm.sh/three@0.164.1","three/":"https://esm.sh/three@0.164.1/"}}
+</script>
 <style>
 /* === RESET === */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -54,9 +58,9 @@ body{font-family:'Space Grotesk',sans-serif;color:#e0f7ff;overflow-x:hidden;back
 /* === OCEAN CANVAS === */
 #oc{position:fixed;inset:0;z-index:0;width:100%;height:100%;}
 
-/* === DIVER CURSOR === */
-#dc{position:fixed;z-index:8000;pointer-events:none;transform:translate(-50%,-50%);will-change:transform;}
-#dc svg{width:72px;height:72px;filter:drop-shadow(0 0 8px rgba(0,229,255,.7));}
+/* === THREE.JS DIVER CURSOR CANVAS === */
+#diver-canvas{position:fixed;inset:0;z-index:8000;pointer-events:none;
+  width:100%!important;height:100%!important;}
 .dbub{position:fixed;border-radius:50%;
   background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.9),rgba(0,200,255,.3));
   border:1px solid rgba(255,255,255,.4);pointer-events:none;z-index:7990;
@@ -295,28 +299,8 @@ body{font-family:'Space Grotesk',sans-serif;color:#e0f7ff;overflow-x:hidden;back
 <!-- OCEAN CANVAS -->
 <canvas id="oc"></canvas>
 
-<!-- DIVER CURSOR -->
-<div id="dc">
-  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" id="dsv">
-    <ellipse cx="55" cy="42" rx="7" ry="14" fill="#1a3a6a" stroke="#00e5ff" stroke-width="1"/>
-    <rect x="51" y="28" width="8" height="4" rx="2" fill="#00bcd4"/>
-    <ellipse cx="40" cy="45" rx="14" ry="11" fill="#0d2b5e" stroke="#00e5ff" stroke-width="1.2"/>
-    <circle cx="40" cy="30" r="10" fill="#1a3a6a" stroke="#00e5ff" stroke-width="1.2"/>
-    <path d="M32 27 Q40 20 48 27 L47 33 Q40 37 33 33 Z" fill="#00e5ff" opacity=".85"/>
-    <ellipse cx="40" cy="30" rx="6" ry="5" fill="#7df4ff" opacity=".6"/>
-    <path d="M47 33 Q56 34 57 40" stroke="#00bcd4" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <ellipse cx="28" cy="53" rx="10" ry="4" fill="#00838f" transform="rotate(-20 28 53)" stroke="#00e5ff" stroke-width=".8"/>
-    <ellipse cx="52" cy="57" rx="10" ry="4" fill="#00838f" transform="rotate(10 52 57)" stroke="#00e5ff" stroke-width=".8"/>
-    <path d="M28 40 Q22 44 20 50" stroke="#0d2b5e" stroke-width="5" stroke-linecap="round" fill="none"/>
-    <path d="M52 40 Q58 44 60 50" stroke="#0d2b5e" stroke-width="5" stroke-linecap="round" fill="none"/>
-    <circle cx="19" cy="51" r="4" fill="#006064"/>
-    <circle cx="61" cy="51" r="4" fill="#006064"/>
-    <circle cx="53" cy="28" r="2.5" fill="none" stroke="rgba(255,255,255,.7)" stroke-width=".8"/>
-    <circle cx="57" cy="22" r="1.8" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".7"/>
-    <circle cx="54" cy="17" r="1.2" fill="none" stroke="rgba(255,255,255,.5)" stroke-width=".6"/>
-    <ellipse cx="36" cy="27" rx="2.5" ry="1.5" fill="white" opacity=".5" transform="rotate(-20 36 27)"/>
-  </svg>
-</div>
+<!-- THREE.JS DIVER CURSOR CANVAS -->
+<canvas id="diver-canvas"></canvas>
 
 <!-- MAIN PORTFOLIO -->
 <div id="pf">
@@ -844,9 +828,9 @@ function draw(){
 }
 
 /* ===================================================
-   DIVER CURSOR
+   THREE.JS DIVER CURSOR — Real GLB model follows cursor
+   Uses vanilla Three.js via CDN importmap
 =================================================== */
-const dc=document.getElementById('dc'),dsv=document.getElementById('dsv');
 let mx={x:W/2,y:H/2},dp={x:W/2,y:H/2},pp={x:W/2,y:H/2},dang=0,lastBub=0;
 
 window.addEventListener('mousemove',e=>{mx.x=e.clientX;mx.y=e.clientY;});
@@ -860,21 +844,149 @@ function spawnBub(x,y){
   setTimeout(()=>b.remove(),2100);
 }
 
-function animDiver(){
-  dp.x+=(mx.x-dp.x)*.075;
-  dp.y+=(mx.y-dp.y)*.075;
-  const ddx=dp.x-pp.x,ddy=dp.y-pp.y;
-  const ta=Math.atan2(ddy,ddx)*(180/Math.PI)*.32;
-  dang+=(ta-dang)*.06;
-  pp.x=dp.x;pp.y=dp.y;
-  const bob=Math.sin(Date.now()*.002)*2.5;
-  dc.style.left=dp.x+'px';
-  dc.style.top=(dp.y+bob)+'px';
-  dsv.style.transform=`rotate(${dang}deg)`;
-  const spd=Math.hypot(ddx,ddy),now=Date.now();
-  if(spd>.5&&now-lastBub>200){spawnBub(dp.x,dp.y);lastBub=now;}
-  requestAnimationFrame(animDiver);
-}
+// ---- Three.js diver scene ----
+(async function initDiver(){
+  const THREE = await import('three');
+  const { GLTFLoader } = await import('https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js');
+
+  const canvas = document.getElementById('diver-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x000000, 0); // transparent
+  renderer.shadowMap.enabled = true;
+
+  // Orthographic camera: maps NDC [-1,1] to screen pixels
+  const cam = new THREE.OrthographicCamera(
+    -window.innerWidth/2,  window.innerWidth/2,
+     window.innerHeight/2, -window.innerHeight/2,
+    -1000, 1000
+  );
+  cam.position.set(0,0,10);
+  cam.lookAt(0,0,0);
+
+  const scene = new THREE.Scene();
+
+  // Underwater-tinted lights matching the portfolio aesthetic
+  const ambLight = new THREE.AmbientLight(0x88aacc, 0.5);
+  scene.add(ambLight);
+  const dirLight = new THREE.DirectionalLight(0xbfefff, 1.4);
+  dirLight.position.set(3,8,5);
+  dirLight.castShadow = true;
+  scene.add(dirLight);
+  const rimLight = new THREE.PointLight(0x00e5ff, 1.2, 300);
+  rimLight.position.set(-4,4,6);
+  scene.add(rimLight);
+
+  // Resize handler
+  window.addEventListener('resize',()=>{
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    cam.left   = -window.innerWidth/2;
+    cam.right  =  window.innerWidth/2;
+    cam.top    =  window.innerHeight/2;
+    cam.bottom = -window.innerHeight/2;
+    cam.updateProjectionMatrix();
+  });
+
+  let diverMesh = null;
+  let mixer = null;
+  const clock = new THREE.Clock();
+
+  // Determine scale from model bounding box — target ~110px tall on screen
+  function fitModel(gltf){
+    const box = new THREE.Box3().setFromObject(gltf.scene);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    // We want the model to appear ~110 screen-pixels tall
+    const targetPx = 110;
+    const modelWorldH = size.y;
+    const scl = targetPx / modelWorldH;
+    gltf.scene.scale.setScalar(scl);
+    // Re-center pivot so model center aligns with cursor
+    gltf.scene.position.sub(center.multiplyScalar(scl));
+    // Rotate to face camera (models usually face +Z or -Z)
+    gltf.scene.rotation.y = Math.PI;
+    return gltf.scene;
+  }
+
+  // Load diver.glb — served from portfolio root
+  const loader = new GLTFLoader();
+  loader.load(
+    'diver.glb',
+    (gltf)=>{
+      diverMesh = fitModel(gltf);
+      scene.add(diverMesh);
+      if(gltf.animations && gltf.animations.length){
+        mixer = new THREE.AnimationMixer(diverMesh);
+        // Play all clips (swimming/idle)
+        gltf.animations.forEach(clip=>mixer.clipAction(clip).play());
+      }
+    },
+    undefined,
+    (err)=>console.warn('diver.glb load error',err)
+  );
+
+  // Convert screen pixel coords to orthographic world coords
+  function screenToWorld(sx, sy){
+    return new THREE.Vector2(
+      sx - window.innerWidth/2,
+      -(sy - window.innerHeight/2)
+    );
+  }
+
+  // Diver screen position (lerped)
+  let diverScreen = {x: window.innerWidth/2, y: window.innerHeight/2};
+  let prevScreen  = {x: window.innerWidth/2, y: window.innerHeight/2};
+  let diverTiltZ  = 0; // tilt toward movement
+  let diverTiltX  = 0; // tilt up/down
+  let lastBubTime = 0;
+
+  function animDiverThree(){
+    const dt = clock.getDelta();
+    if(mixer) mixer.update(dt);
+
+    // Lerp cursor position
+    diverScreen.x += (mx.x - diverScreen.x) * 0.075;
+    diverScreen.y += (mx.y - diverScreen.y) * 0.075;
+
+    const ddx = diverScreen.x - prevScreen.x;
+    const ddy = diverScreen.y - prevScreen.y;
+    prevScreen.x = diverScreen.x;
+    prevScreen.y = diverScreen.y;
+
+    if(diverMesh){
+      // Position in orthographic world space
+      const wp = screenToWorld(diverScreen.x, diverScreen.y);
+      diverMesh.position.x = wp.x;
+      diverMesh.position.y = wp.y + Math.sin(clock.elapsedTime * 0.8) * 5; // gentle bob
+
+      // Tilt Z toward horizontal movement direction
+      const targetTiltZ = -ddx * 0.08;
+      const targetTiltX =  ddy * 0.04;
+      diverTiltZ += (targetTiltZ - diverTiltZ) * 0.07;
+      diverTiltX += (targetTiltX - diverTiltX) * 0.07;
+      diverMesh.rotation.z = diverTiltZ;
+      diverMesh.rotation.x = diverTiltX;
+      // Gentle idle sway
+      diverMesh.rotation.y = Math.PI + Math.sin(clock.elapsedTime * 0.3) * 0.06;
+    }
+
+    // Spawn DOM bubble trail when moving
+    const spd = Math.hypot(ddx, ddy);
+    const now = Date.now();
+    if(spd > 0.4 && now - lastBubTime > 200){
+      spawnBub(diverScreen.x, diverScreen.y);
+      lastBubTime = now;
+    }
+
+    renderer.render(scene, cam);
+    requestAnimationFrame(animDiverThree);
+  }
+
+  animDiverThree();
+})();
+
+function animDiver(){} // kept for compatibility — real diver runs inside initDiver()
 
 /* ===================================================
    GLASS CARD GLOW TRACKING
