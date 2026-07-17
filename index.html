@@ -1,1053 +1,1980 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Giripriyan S — AI/ML Developer | Underwater Portfolio</title>
-<meta name="description" content="Giripriyan S — Aspiring AI and ML developer specializing in Computer Vision, NLP, and intelligent systems." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-<!-- Three.js importmap for bare specifier resolution -->
-<script type="importmap">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giripriyan S — AI/ML Developer | Underwater Portfolio</title>
+  <meta name="description"
+    content="Giripriyan S — Aspiring AI and ML developer specializing in Computer Vision, NLP, and intelligent systems." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <!-- Three.js importmap for bare specifier resolution -->
+  <script type="importmap">
 {"imports":{"three":"https://esm.sh/three@0.164.1","three/":"https://esm.sh/three@0.164.1/"}}
 </script>
-<style>
-/* === RESET === */
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-*{cursor:none!important;}
-html{scroll-behavior:smooth;}
-body{font-family:'Space Grotesk',sans-serif;color:#e0f7ff;overflow-x:hidden;background:#000820;}
-:root{
-  --teal:#00e5ff;--cyan:#00bcd4;--gold:#ffd700;
-  --glass:rgba(255,255,255,0.06);--gborder:rgba(0,230,255,0.25);
-  --text:rgba(224,247,255,0.8);
-}
+  <style>
+    /* === RESET === */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* === WELCOME === */
-#ws{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;
-  background:radial-gradient(ellipse at center,#001a3a 0%,#000510 70%);overflow:hidden;
-  transition:opacity 1.2s ease,transform 1.2s ease;}
-#ws.out{opacity:0;transform:translateY(-24px);pointer-events:none;}
-.wstars{position:absolute;inset:0;pointer-events:none;}
-.wstar{position:absolute;border-radius:50%;background:white;
-  animation:twinkle var(--d,3s) ease-in-out infinite;opacity:var(--o,0.7);}
-.wsurface{position:absolute;bottom:0;left:0;right:0;height:200px;
-  background:linear-gradient(180deg,transparent,rgba(0,80,200,0.3));}
-.wc{text-align:center;z-index:10;padding:40px;}
-.wg{font-family:'Exo 2',sans-serif;font-size:clamp(0.8rem,2vw,1rem);letter-spacing:.45em;text-transform:uppercase;
-  color:var(--teal);opacity:0;animation:fiu .8s .3s forwards;margin-bottom:14px;}
-.wn{font-family:'Orbitron',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;
-  background:linear-gradient(135deg,#7df4ff 0%,#00e5ff 45%,#0099ff 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  opacity:0;animation:fiu .9s .6s forwards;filter:drop-shadow(0 0 30px rgba(0,229,255,.5));}
-.wt{font-family:'Space Grotesk',sans-serif;font-size:clamp(.9rem,2.5vw,1.3rem);font-weight:300;
-  color:rgba(224,247,255,.75);letter-spacing:.15em;opacity:0;animation:fiu .9s 1s forwards;margin-top:10px;}
-.wtag{font-family:'Exo 2',sans-serif;font-size:clamp(.7rem,1.5vw,.9rem);color:var(--teal);
-  opacity:0;animation:fiu .8s 1.4s forwards;margin-top:6px;font-style:italic;}
-.wbtn-wrap{margin-top:40px;opacity:0;animation:fiu .8s 1.8s forwards;display:flex;flex-direction:column;align-items:center;gap:12px;}
-.dbtn{padding:14px 42px;border:1.5px solid var(--teal);background:rgba(0,229,255,.08);color:var(--teal);
-  font-family:'Exo 2',sans-serif;font-size:.88rem;letter-spacing:.3em;text-transform:uppercase;
-  border-radius:50px;transition:all .3s;animation:pborder 2s infinite;position:relative;overflow:hidden;}
-.dbtn::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,229,255,.2),transparent 70%);
-  opacity:0;transition:opacity .3s;}
-.dbtn:hover::before{opacity:1;}
-.dhint{font-family:'Exo 2',sans-serif;font-size:.72rem;color:rgba(0,229,255,.5);
-  letter-spacing:.2em;animation:bob 1.5s infinite;}
+    * {
+      cursor: none !important;
+    }
 
-/* === OCEAN CANVAS === */
-#oc{position:fixed;inset:0;z-index:0;width:100%;height:100%;}
+    html {
+      scroll-behavior: smooth;
+    }
 
-/* === THREE.JS DIVER CURSOR CANVAS === */
-#diver-canvas{position:fixed;inset:0;z-index:8000;pointer-events:none;
-  width:100%!important;height:100%!important;}
-.dbub{position:fixed;border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.9),rgba(0,200,255,.3));
-  border:1px solid rgba(255,255,255,.4);pointer-events:none;z-index:7990;
-  animation:bubrise var(--dur,2s) ease-out forwards;}
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      color: #e0f7ff;
+      overflow-x: hidden;
+      background: #000820;
+    }
 
-/* === PORTFOLIO === */
-#pf{position:relative;z-index:100;opacity:0;transition:opacity 1.5s ease;min-height:100vh;}
-#pf.vis{opacity:1;}
+    :root {
+      --teal: #00e5ff;
+      --cyan: #00bcd4;
+      --gold: #ffd700;
+      --glass: rgba(255, 255, 255, 0.06);
+      --gborder: rgba(0, 230, 255, 0.25);
+      --text: rgba(224, 247, 255, 0.8);
+    }
 
-/* === NAV === */
-#nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:16px 40px;
-  display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(180deg,rgba(0,8,32,.95),transparent);backdrop-filter:blur(6px);}
-.nlogo{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:700;color:var(--teal);
-  letter-spacing:.1em;text-decoration:none;}
-.nlinks{display:flex;gap:26px;list-style:none;}
-.nlinks a{font-family:'Exo 2',sans-serif;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;
-  color:rgba(224,247,255,.65);text-decoration:none;transition:color .3s;position:relative;}
-.nlinks a::after{content:'';position:absolute;bottom:-3px;left:0;right:100%;height:1px;
-  background:var(--teal);transition:right .3s ease;}
-.nlinks a:hover{color:var(--teal);}
-.nlinks a:hover::after{right:0;}
-.dind{font-family:'Exo 2',sans-serif;font-size:.68rem;color:rgba(0,229,255,.6);
-  letter-spacing:.15em;display:flex;align-items:center;gap:6px;}
-.dbar{width:60px;height:3px;background:rgba(0,229,255,.15);border-radius:2px;overflow:hidden;}
-.dbar-f{height:100%;background:var(--teal);border-radius:2px;transition:width .3s;width:0%;}
+    /* === WELCOME === */
+    #ws {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: radial-gradient(ellipse at center, #001a3a 0%, #000510 70%);
+      overflow: hidden;
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
 
-/* === SECTIONS === */
-.sec{min-height:100vh;padding:100px 40px 60px;position:relative;
-  display:flex;align-items:flex-start;justify-content:center;flex-direction:column;}
-.si{max-width:1100px;width:100%;margin:0 auto;}
-.sdl{font-family:'Exo 2',sans-serif;font-size:.63rem;letter-spacing:.4em;text-transform:uppercase;
-  color:rgba(0,229,255,.42);margin-bottom:8px;}
-.stitle{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.6rem);font-weight:700;
-  background:linear-gradient(135deg,#fff 0%,var(--teal) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:38px;position:relative;}
-.stitle::after{content:'';display:block;width:56px;height:2px;
-  background:linear-gradient(90deg,var(--teal),transparent);margin-top:10px;}
+    #ws.out {
+      opacity: 0;
+      transform: translateY(-24px);
+      pointer-events: none;
+    }
 
-/* === GLASS CARDS === */
-.gc{background:var(--glass);border:1px solid var(--gborder);border-radius:16px;
-  padding:28px 32px;backdrop-filter:blur(12px);
-  transition:transform .5s cubic-bezier(.23,1,.32,1),box-shadow .5s,background .4s,border-color .4s;
-  position:relative;overflow:hidden;}
-.gc::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at var(--mx,50%) var(--my,50%),rgba(0,229,255,.12),transparent 65%);
-  opacity:0;transition:opacity .4s;pointer-events:none;}
-.gc:hover::before{opacity:1;}
-.gc:hover{transform:scale(1.04) translateY(-4px);
-  box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 30px rgba(0,229,255,.15),inset 0 1px 0 rgba(255,255,255,.1);
-  border-color:rgba(0,229,255,.55);background:rgba(255,255,255,.09);}
-.gcs{position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 40%,rgba(0,229,255,.06) 50%,transparent 60%);
-  transform:translateX(-100%);}
-.gc:hover .gcs{transform:translateX(100%);transition:transform .6s ease;}
+    .wstars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
 
-/* === HERO === */
-#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
-  text-align:center;flex-direction:column;padding-top:80px;}
-.hbadge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;
-  border:1px solid rgba(0,229,255,.35);border-radius:50px;background:rgba(0,229,255,.07);
-  font-family:'Exo 2',sans-serif;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
-  color:var(--teal);margin-bottom:24px;animation:fiu .8s both;}
-.hdot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:blink 1.5s infinite;}
-.hname{font-family:'Orbitron',sans-serif;font-size:clamp(3rem,9vw,7rem);font-weight:900;line-height:1;
-  background:linear-gradient(135deg,#fff 0%,#7df4ff 35%,#00e5ff 65%,#0088ff 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:fiu .9s .1s both;filter:drop-shadow(0 0 40px rgba(0,229,255,.3));}
-.hrole{font-size:clamp(1rem,2.5vw,1.4rem);color:rgba(224,247,255,.7);font-weight:300;
-  letter-spacing:.2em;animation:fiu .9s .25s both;margin-top:14px;}
-.hloc{display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Exo 2',sans-serif;
-  font-size:.78rem;color:rgba(0,229,255,.55);animation:fiu .8s .4s both;margin-top:9px;}
-.hlinks{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px;animation:fiu .8s .55s both;}
-.hlbtn{display:flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--gborder);
-  border-radius:50px;background:var(--glass);color:#e0f7ff;text-decoration:none;
-  font-family:'Exo 2',sans-serif;font-size:.76rem;letter-spacing:.1em;
-  backdrop-filter:blur(8px);transition:all .3s;}
-.hlbtn:hover{border-color:var(--teal);color:var(--teal);background:rgba(0,229,255,.1);
-  transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
-.hptext{max-width:680px;margin:30px auto 0;font-size:.9rem;line-height:1.85;
-  color:rgba(224,247,255,.7);animation:fiu .8s .65s both;}
-.scrollcue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;animation:fiu .8s 1.2s both;}
-.scline{width:1px;height:50px;background:linear-gradient(180deg,transparent,var(--teal));
-  animation:spulse 1.8s ease-in-out infinite;}
-.sctext{font-family:'Exo 2',sans-serif;font-size:.58rem;letter-spacing:.3em;color:rgba(0,229,255,.5);text-transform:uppercase;}
+    .wstar {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--d, 3s) ease-in-out infinite;
+      opacity: var(--o, 0.7);
+    }
 
-/* === EXP === */
-.egrid{display:grid;grid-template-columns:1fr;gap:22px;}
-.eh{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
-.eco{font-family:'Orbitron',sans-serif;font-size:.82rem;letter-spacing:.15em;color:var(--teal);margin-bottom:4px;}
-.ero{font-size:1.08rem;font-weight:600;color:#e0f7ff;}
-.ebadge{display:inline-block;padding:3px 12px;border-radius:50px;
-  border:1px solid rgba(255,215,0,.4);background:rgba(255,215,0,.08);
-  font-family:'Exo 2',sans-serif;font-size:.62rem;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;}
-.edur{font-family:'Exo 2',sans-serif;font-size:.72rem;color:rgba(224,247,255,.5);margin-top:3px;}
-.ebl{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:8px;}
-.ebl li{display:flex;gap:10px;font-size:.83rem;line-height:1.65;color:rgba(224,247,255,.72);}
-.ebl li::before{content:'\25B8';color:var(--teal);flex-shrink:0;margin-top:2px;}
-.emet{display:inline-flex;align-items:center;gap:6px;background:rgba(0,229,255,.1);
-  border:1px solid rgba(0,229,255,.2);border-radius:6px;padding:2px 8px;
-  font-family:'Orbitron',sans-serif;font-size:.78rem;color:var(--teal);margin:8px 4px 0 0;}
+    .wsurface {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(180deg, transparent, rgba(0, 80, 200, 0.3));
+    }
 
-/* === SKILLS === */
-.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;}
-.scat-ic{font-size:1.7rem;margin-bottom:11px;display:block;}
-.scat-n{font-family:'Exo 2',sans-serif;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;
-  color:var(--teal);margin-bottom:13px;}
-.stags{display:flex;flex-wrap:wrap;gap:6px;}
-.stag{padding:4px 11px;border-radius:30px;background:rgba(0,229,255,.07);
-  border:1px solid rgba(0,229,255,.18);font-family:'Exo 2',sans-serif;font-size:.7rem;
-  color:rgba(224,247,255,.85);transition:all .25s;}
-.stag:hover{background:rgba(0,229,255,.18);border-color:var(--teal);color:var(--teal);transform:translateY(-1px);}
+    .wc {
+      text-align: center;
+      z-index: 10;
+      padding: 40px;
+    }
 
-/* === PROJECTS === */
-.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;}
-.pnum{font-family:'Orbitron',sans-serif;font-size:2.8rem;font-weight:900;
-  color:rgba(0,229,255,.07);position:absolute;top:16px;right:18px;line-height:1;user-select:none;}
-.pstack{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:13px;}
-.ptag{padding:2px 8px;border-radius:4px;background:rgba(0,100,200,.2);
-  border:1px solid rgba(0,150,255,.2);font-family:'Exo 2',sans-serif;font-size:.6rem;
-  color:rgba(100,200,255,.8);}
-.ptitle{font-size:1.08rem;font-weight:600;color:#e0f7ff;margin-bottom:6px;line-height:1.3;}
-.psub{font-family:'Exo 2',sans-serif;font-size:.68rem;color:var(--teal);letter-spacing:.15em;
-  text-transform:uppercase;margin-bottom:11px;}
-.pdesc{font-size:.8rem;line-height:1.65;color:rgba(224,247,255,.65);margin-bottom:16px;}
-.plink{display:inline-flex;align-items:center;gap:6px;font-family:'Exo 2',sans-serif;
-  font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--teal);
-  text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s,gap .3s;}
-.plink:hover{border-color:var(--teal);gap:10px;}
+    .wg {
+      font-family: 'Exo 2', sans-serif;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      letter-spacing: .45em;
+      text-transform: uppercase;
+      color: var(--teal);
+      opacity: 0;
+      animation: fiu .8s .3s forwards;
+      margin-bottom: 14px;
+    }
 
-/* === EDU === */
-.edug{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;}
-.edeg{font-size:.98rem;font-weight:600;color:#e0f7ff;margin-bottom:6px;}
-.esch{font-size:.8rem;color:rgba(224,247,255,.62);line-height:1.5;margin-bottom:13px;}
-.escore{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:50px;
-  background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);
-  font-family:'Orbitron',sans-serif;font-size:.82rem;color:var(--gold);}
+    .wn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #7df4ff 0%, #00e5ff 45%, #0099ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+      animation: fiu .9s .6s forwards;
+      filter: drop-shadow(0 0 30px rgba(0, 229, 255, .5));
+    }
 
-/* === ACHIEVEMENTS === */
-.agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;}
-.acard{text-align:center;}
-.arank{font-family:'Orbitron',sans-serif;font-size:1.7rem;font-weight:900;
-  background:linear-gradient(135deg,var(--gold),#ff8c00);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 12px rgba(255,215,0,.4));display:block;margin-bottom:8px;}
-.aev{font-size:.88rem;font-weight:600;color:#e0f7ff;margin-bottom:4px;}
-.adet{font-size:.74rem;color:rgba(224,247,255,.52);line-height:1.55;}
+    .wt {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(.9rem, 2.5vw, 1.3rem);
+      font-weight: 300;
+      color: rgba(224, 247, 255, .75);
+      letter-spacing: .15em;
+      opacity: 0;
+      animation: fiu .9s 1s forwards;
+      margin-top: 10px;
+    }
 
-/* === CERTS === */
-.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
-.ccard{display:flex;align-items:center;gap:14px;}
-.cicon{width:40px;height:40px;border-radius:10px;
-  background:linear-gradient(135deg,rgba(0,229,255,.15),rgba(0,100,200,.15));
-  border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;
-  justify-content:center;font-size:1.15rem;flex-shrink:0;}
-.cname{font-size:.83rem;font-weight:600;color:#e0f7ff;margin-bottom:3px;}
-.ciss{font-family:'Exo 2',sans-serif;font-size:.66rem;color:rgba(0,229,255,.58);letter-spacing:.08em;}
+    .wtag {
+      font-family: 'Exo 2', sans-serif;
+      font-size: clamp(.7rem, 1.5vw, .9rem);
+      color: var(--teal);
+      opacity: 0;
+      animation: fiu .8s 1.4s forwards;
+      margin-top: 6px;
+      font-style: italic;
+    }
 
-/* === PUB === */
-.pj{font-family:'Exo 2',sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--teal);margin-bottom:8px;}
-.ptitle2{font-size:.98rem;font-weight:600;color:#e0f7ff;margin-bottom:6px;line-height:1.4;}
-.pdate{font-size:.73rem;color:rgba(224,247,255,.5);margin-bottom:15px;}
-.publink{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;
-  border:1px solid rgba(0,229,255,.3);border-radius:50px;background:rgba(0,229,255,.07);
-  color:var(--teal);font-family:'Exo 2',sans-serif;font-size:.7rem;text-decoration:none;
-  letter-spacing:.1em;text-transform:uppercase;transition:all .3s;}
-.publink:hover{background:rgba(0,229,255,.15);border-color:var(--teal);transform:translateX(4px);}
+    .wbtn-wrap {
+      margin-top: 40px;
+      opacity: 0;
+      animation: fiu .8s 1.8s forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
 
-/* === CONTACT === */
-#contact{padding:80px 40px 120px;}
-.csub{font-size:.88rem;color:rgba(224,247,255,.6);margin-bottom:30px;line-height:1.7;
-  max-width:500px;margin-left:auto;margin-right:auto;}
-.clinks{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;margin-bottom:60px;}
-.cbtn{display:flex;align-items:center;gap:9px;padding:12px 26px;border-radius:50px;
-  background:var(--glass);border:1px solid var(--gborder);color:#e0f7ff;
-  text-decoration:none;font-family:'Exo 2',sans-serif;font-size:.76rem;
-  letter-spacing:.08em;backdrop-filter:blur(8px);transition:all .3s;}
-.cbtn:hover{border-color:var(--teal);color:var(--teal);background:rgba(0,229,255,.1);
-  transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.3);}
-.ftline{font-family:'Exo 2',sans-serif;font-size:.66rem;color:rgba(224,247,255,.28);
-  letter-spacing:.1em;margin-top:40px;}
+    .dbtn {
+      padding: 14px 42px;
+      border: 1.5px solid var(--teal);
+      background: rgba(0, 229, 255, .08);
+      color: var(--teal);
+      font-family: 'Exo 2', sans-serif;
+      font-size: .88rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      border-radius: 50px;
+      transition: all .3s;
+      animation: pborder 2s infinite;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* === ANIMATIONS === */
-@keyframes fiu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-@keyframes twinkle{0%,100%{opacity:var(--o,.7);transform:scale(1)}50%{opacity:.1;transform:scale(.5)}}
-@keyframes pborder{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.4)}50%{box-shadow:0 0 0 8px rgba(0,229,255,0)}}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
-@keyframes bubrise{0%{transform:translateY(0) scale(1);opacity:.8}100%{transform:translateY(-90px) scale(.15);opacity:0}}
-@keyframes spulse{0%,100%{transform:scaleY(1);opacity:.6}50%{transform:scaleY(.7);opacity:1}}
+    .dbtn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(0, 229, 255, .2), transparent 70%);
+      opacity: 0;
+      transition: opacity .3s;
+    }
 
-/* === REVEAL ON SCROLL === */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
-.reveal.vis{opacity:1;transform:translateY(0);}
-.rst>*{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
-.rst.vis>*:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.05s;}
-.rst.vis>*:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.15s;}
-.rst.vis>*:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.25s;}
-.rst.vis>*:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.35s;}
-.rst.vis>*:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.45s;}
-.rst.vis>*:nth-child(6){opacity:1;transform:translateY(0);transition-delay:.55s;}
+    .dbtn:hover::before {
+      opacity: 1;
+    }
 
-@media(max-width:768px){
-  #nav{padding:14px 18px;}
-  .nlinks{display:none;}
-  .sec{padding:90px 18px 50px;}
-  .pgrid,.sgrid{grid-template-columns:1fr;}
-}
-</style>
+    .dhint {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .72rem;
+      color: rgba(0, 229, 255, .5);
+      letter-spacing: .2em;
+      animation: bob 1.5s infinite;
+    }
+
+    /* === OCEAN CANVAS === */
+    #oc {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* === THREE.JS DIVER CURSOR CANVAS === */
+    #diver-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 8000;
+      pointer-events: none;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .dbub {
+      position: fixed;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .9), rgba(0, 200, 255, .3));
+      border: 1px solid rgba(255, 255, 255, .4);
+      pointer-events: none;
+      z-index: 7990;
+      animation: bubrise var(--dur, 2s) ease-out forwards;
+    }
+
+    /* === PORTFOLIO === */
+    #pf {
+      position: relative;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      min-height: 100vh;
+    }
+
+    #pf.vis {
+      opacity: 1;
+    }
+
+    /* === NAV === */
+    #nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, rgba(0, 8, 32, .95), transparent);
+      backdrop-filter: blur(6px);
+    }
+
+    .nlogo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: .1em;
+      text-decoration: none;
+    }
+
+    .nlinks {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+    }
+
+    .nlinks a {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .78rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(224, 247, 255, .65);
+      text-decoration: none;
+      transition: color .3s;
+      position: relative;
+    }
+
+    .nlinks a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      right: 100%;
+      height: 1px;
+      background: var(--teal);
+      transition: right .3s ease;
+    }
+
+    .nlinks a:hover {
+      color: var(--teal);
+    }
+
+    .nlinks a:hover::after {
+      right: 0;
+    }
+
+    .dind {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .68rem;
+      color: rgba(0, 229, 255, .6);
+      letter-spacing: .15em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dbar {
+      width: 60px;
+      height: 3px;
+      background: rgba(0, 229, 255, .15);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .dbar-f {
+      height: 100%;
+      background: var(--teal);
+      border-radius: 2px;
+      transition: width .3s;
+      width: 0%;
+    }
+
+    /* === SECTIONS === */
+    .sec {
+      min-height: 100vh;
+      padding: 100px 40px 60px;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .si {
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .sdl {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .63rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: rgba(0, 229, 255, .42);
+      margin-bottom: 8px;
+    }
+
+    .stitle {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2.6rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 38px;
+      position: relative;
+    }
+
+    .stitle::after {
+      content: '';
+      display: block;
+      width: 56px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      margin-top: 10px;
+    }
+
+    /* === GLASS CARDS === */
+    .gc {
+      background: var(--glass);
+      border: 1px solid var(--gborder);
+      border-radius: 16px;
+      padding: 28px 32px;
+      backdrop-filter: blur(12px);
+      transition: transform .5s cubic-bezier(.23, 1, .32, 1), box-shadow .5s, background .4s, border-color .4s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gc::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at var(--mx, 50%) var(--my, 50%), rgba(0, 229, 255, .12), transparent 65%);
+      opacity: 0;
+      transition: opacity .4s;
+      pointer-events: none;
+    }
+
+    .gc:hover::before {
+      opacity: 1;
+    }
+
+    .gc:hover {
+      transform: scale(1.04) translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .4), 0 0 30px rgba(0, 229, 255, .15), inset 0 1px 0 rgba(255, 255, 255, .1);
+      border-color: rgba(0, 229, 255, .55);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .gcs {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(0, 229, 255, .06) 50%, transparent 60%);
+      transform: translateX(-100%);
+    }
+
+    .gc:hover .gcs {
+      transform: translateX(100%);
+      transition: transform .6s ease;
+    }
+
+    /* === HERO === */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-direction: column;
+      padding-top: 80px;
+    }
+
+    .hbadge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border: 1px solid rgba(0, 229, 255, .35);
+      border-radius: 50px;
+      background: rgba(0, 229, 255, .07);
+      font-family: 'Exo 2', sans-serif;
+      font-size: .7rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 24px;
+      animation: fiu .8s both;
+    }
+
+    .hdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: blink 1.5s infinite;
+    }
+
+    .hname {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, #7df4ff 35%, #00e5ff 65%, #0088ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fiu .9s .1s both;
+      filter: drop-shadow(0 0 40px rgba(0, 229, 255, .3));
+    }
+
+    .hrole {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: rgba(224, 247, 255, .7);
+      font-weight: 300;
+      letter-spacing: .2em;
+      animation: fiu .9s .25s both;
+      margin-top: 14px;
+    }
+
+    .hloc {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: 'Exo 2', sans-serif;
+      font-size: .78rem;
+      color: rgba(0, 229, 255, .55);
+      animation: fiu .8s .4s both;
+      margin-top: 9px;
+    }
+
+    .hlinks {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 34px;
+      animation: fiu .8s .55s both;
+    }
+
+    .hlbtn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid var(--gborder);
+      border-radius: 50px;
+      background: var(--glass);
+      color: #e0f7ff;
+      text-decoration: none;
+      font-family: 'Exo 2', sans-serif;
+      font-size: .76rem;
+      letter-spacing: .1em;
+      backdrop-filter: blur(8px);
+      transition: all .3s;
+    }
+
+    .hlbtn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: rgba(0, 229, 255, .1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .3);
+    }
+
+    .hptext {
+      max-width: 680px;
+      margin: 30px auto 0;
+      font-size: .9rem;
+      line-height: 1.85;
+      color: rgba(224, 247, 255, .7);
+      animation: fiu .8s .65s both;
+    }
+
+    .scrollcue {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: fiu .8s 1.2s both;
+    }
+
+    .scline {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(180deg, transparent, var(--teal));
+      animation: spulse 1.8s ease-in-out infinite;
+    }
+
+    .sctext {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .58rem;
+      letter-spacing: .3em;
+      color: rgba(0, 229, 255, .5);
+      text-transform: uppercase;
+    }
+
+    /* === EXP === */
+    .egrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .eh {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .eco {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .82rem;
+      letter-spacing: .15em;
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+
+    .ero {
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: #e0f7ff;
+    }
+
+    .ebadge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 215, 0, .4);
+      background: rgba(255, 215, 0, .08);
+      font-family: 'Exo 2', sans-serif;
+      font-size: .62rem;
+      letter-spacing: .2em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .edur {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .72rem;
+      color: rgba(224, 247, 255, .5);
+      margin-top: 3px;
+    }
+
+    .ebl {
+      list-style: none;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ebl li {
+      display: flex;
+      gap: 10px;
+      font-size: .83rem;
+      line-height: 1.65;
+      color: rgba(224, 247, 255, .72);
+    }
+
+    .ebl li::before {
+      content: '\25B8';
+      color: var(--teal);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .emet {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 229, 255, .1);
+      border: 1px solid rgba(0, 229, 255, .2);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .78rem;
+      color: var(--teal);
+      margin: 8px 4px 0 0;
+    }
+
+    /* === SKILLS === */
+    .sgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .scat-ic {
+      font-size: 1.7rem;
+      margin-bottom: 11px;
+      display: block;
+    }
+
+    .scat-n {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .62rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 13px;
+    }
+
+    .stags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .stag {
+      padding: 4px 11px;
+      border-radius: 30px;
+      background: rgba(0, 229, 255, .07);
+      border: 1px solid rgba(0, 229, 255, .18);
+      font-family: 'Exo 2', sans-serif;
+      font-size: .7rem;
+      color: rgba(224, 247, 255, .85);
+      transition: all .25s;
+    }
+
+    .stag:hover {
+      background: rgba(0, 229, 255, .18);
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-1px);
+    }
+
+    /* === PROJECTS === */
+    .pgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .pnum {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: rgba(0, 229, 255, .07);
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .pstack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 13px;
+    }
+
+    .ptag {
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(0, 100, 200, .2);
+      border: 1px solid rgba(0, 150, 255, .2);
+      font-family: 'Exo 2', sans-serif;
+      font-size: .6rem;
+      color: rgba(100, 200, 255, .8);
+    }
+
+    .ptitle {
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: #e0f7ff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .psub {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .68rem;
+      color: var(--teal);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 11px;
+    }
+
+    .pdesc {
+      font-size: .8rem;
+      line-height: 1.65;
+      color: rgba(224, 247, 255, .65);
+      margin-bottom: 16px;
+    }
+
+    .plink {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Exo 2', sans-serif;
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s, gap .3s;
+    }
+
+    .plink:hover {
+      border-color: var(--teal);
+      gap: 10px;
+    }
+
+    /* === EDU === */
+    .edug {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+    }
+
+    .edeg {
+      font-size: .98rem;
+      font-weight: 600;
+      color: #e0f7ff;
+      margin-bottom: 6px;
+    }
+
+    .esch {
+      font-size: .8rem;
+      color: rgba(224, 247, 255, .62);
+      line-height: 1.5;
+      margin-bottom: 13px;
+    }
+
+    .escore {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      background: rgba(255, 215, 0, .08);
+      border: 1px solid rgba(255, 215, 0, .25);
+      font-family: 'Orbitron', sans-serif;
+      font-size: .82rem;
+      color: var(--gold);
+    }
+
+    /* === ACHIEVEMENTS === */
+    .agrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .acard {
+      text-align: center;
+    }
+
+    .arank {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), #ff8c00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, .4));
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .aev {
+      font-size: .88rem;
+      font-weight: 600;
+      color: #e0f7ff;
+      margin-bottom: 4px;
+    }
+
+    .adet {
+      font-size: .74rem;
+      color: rgba(224, 247, 255, .52);
+      line-height: 1.55;
+    }
+
+    /* === CERTS === */
+    .cgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .ccard {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cicon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(0, 229, 255, .15), rgba(0, 100, 200, .15));
+      border: 1px solid rgba(0, 229, 255, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .cname {
+      font-size: .83rem;
+      font-weight: 600;
+      color: #e0f7ff;
+      margin-bottom: 3px;
+    }
+
+    .ciss {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .66rem;
+      color: rgba(0, 229, 255, .58);
+      letter-spacing: .08em;
+    }
+
+    /* === PUB === */
+    .pj {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+
+    .ptitle2 {
+      font-size: .98rem;
+      font-weight: 600;
+      color: #e0f7ff;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .pdate {
+      font-size: .73rem;
+      color: rgba(224, 247, 255, .5);
+      margin-bottom: 15px;
+    }
+
+    .publink {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 18px;
+      border: 1px solid rgba(0, 229, 255, .3);
+      border-radius: 50px;
+      background: rgba(0, 229, 255, .07);
+      color: var(--teal);
+      font-family: 'Exo 2', sans-serif;
+      font-size: .7rem;
+      text-decoration: none;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: all .3s;
+    }
+
+    .publink:hover {
+      background: rgba(0, 229, 255, .15);
+      border-color: var(--teal);
+      transform: translateX(4px);
+    }
+
+    /* === CONTACT === */
+    #contact {
+      padding: 80px 40px 120px;
+    }
+
+    .csub {
+      font-size: .88rem;
+      color: rgba(224, 247, 255, .6);
+      margin-bottom: 30px;
+      line-height: 1.7;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .clinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+      justify-content: center;
+      margin-bottom: 60px;
+    }
+
+    .cbtn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 26px;
+      border-radius: 50px;
+      background: var(--glass);
+      border: 1px solid var(--gborder);
+      color: #e0f7ff;
+      text-decoration: none;
+      font-family: 'Exo 2', sans-serif;
+      font-size: .76rem;
+      letter-spacing: .08em;
+      backdrop-filter: blur(8px);
+      transition: all .3s;
+    }
+
+    .cbtn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: rgba(0, 229, 255, .1);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+    }
+
+    .ftline {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .66rem;
+      color: rgba(224, 247, 255, .28);
+      letter-spacing: .1em;
+      margin-top: 40px;
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes fiu {
+      from {
+        opacity: 0;
+        transform: translateY(22px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: var(--o, .7);
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .1;
+        transform: scale(.5)
+      }
+    }
+
+    @keyframes pborder {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 229, 255, .4)
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(0, 229, 255, 0)
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    @keyframes bob {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(5px)
+      }
+    }
+
+    @keyframes bubrise {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: .8
+      }
+
+      100% {
+        transform: translateY(-90px) scale(.15);
+        opacity: 0
+      }
+    }
+
+    @keyframes spulse {
+
+      0%,
+      100% {
+        transform: scaleY(1);
+        opacity: .6
+      }
+
+      50% {
+        transform: scaleY(.7);
+        opacity: 1
+      }
+    }
+
+    /* === REVEAL ON SCROLL === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+
+    .reveal.vis {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .rst>* {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .rst.vis>*:nth-child(1) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: .05s;
+    }
+
+    .rst.vis>*:nth-child(2) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: .15s;
+    }
+
+    .rst.vis>*:nth-child(3) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: .25s;
+    }
+
+    .rst.vis>*:nth-child(4) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: .35s;
+    }
+
+    .rst.vis>*:nth-child(5) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: .45s;
+    }
+
+    .rst.vis>*:nth-child(6) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: .55s;
+    }
+
+    @media(max-width:768px) {
+      #nav {
+        padding: 14px 18px;
+      }
+
+      .nlinks {
+        display: none;
+      }
+
+      .sec {
+        padding: 90px 18px 50px;
+      }
+
+      .pgrid,
+      .sgrid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- WELCOME SCREEN -->
-<div id="ws">
-  <div class="wstars" id="wst"></div>
-  <svg style="position:absolute;bottom:0;left:-50%;width:200%;height:110px" viewBox="0 0 1440 110" preserveAspectRatio="none">
-    <path id="wv1" fill="rgba(0,100,210,.22)" d=""/>
-    <path id="wv2" fill="rgba(0,60,180,.15)" d=""/>
-  </svg>
-  <div class="wsurface"></div>
-  <div class="wc">
-    <p class="wg">Welcome to the deep</p>
-    <h1 class="wn">Giripriyan S</h1>
-    <p class="wt">AI &amp; Machine Learning Developer</p>
-    <p class="wtag">Coimbatore, India &nbsp;&middot;&nbsp; B.Tech AIML &nbsp;&middot;&nbsp; Intel&reg; Unnati 2025</p>
-    <div class="wbtn-wrap">
-      <button class="dbtn" id="dbtn" onclick="startDive()">&#x21E9;&nbsp; DIVE IN &nbsp;&#x21E9;</button>
-      <span class="dhint">scroll or click to dive</span>
+  <!-- WELCOME SCREEN -->
+  <div id="ws">
+    <div class="wstars" id="wst"></div>
+    <svg style="position:absolute;bottom:0;left:-50%;width:200%;height:110px" viewBox="0 0 1440 110"
+      preserveAspectRatio="none">
+      <path id="wv1" fill="rgba(0,100,210,.22)" d="" />
+      <path id="wv2" fill="rgba(0,60,180,.15)" d="" />
+    </svg>
+    <div class="wsurface"></div>
+    <div class="wc">
+      <p class="wg">Welcome to the deep</p>
+      <h1 class="wn">Giripriyan S</h1>
+      <p class="wt">AI &amp; Machine Learning Developer</p>
+      <p class="wtag">Coimbatore, India &nbsp;&middot;&nbsp; B.Tech AIML &nbsp;&middot;&nbsp; Intel&reg; Unnati 2025</p>
+      <div class="wbtn-wrap">
+        <button class="dbtn" id="dbtn" onclick="startDive()">&#x21E9;&nbsp; DIVE IN &nbsp;&#x21E9;</button>
+        <span class="dhint">scroll or click to dive</span>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- OCEAN CANVAS -->
-<canvas id="oc"></canvas>
+  <!-- OCEAN CANVAS -->
+  <canvas id="oc"></canvas>
 
-<!-- THREE.JS DIVER CURSOR CANVAS -->
-<canvas id="diver-canvas"></canvas>
+  <!-- THREE.JS DIVER CURSOR CANVAS -->
+  <canvas id="diver-canvas"></canvas>
 
-<!-- MAIN PORTFOLIO -->
-<div id="pf">
+  <!-- MAIN PORTFOLIO -->
+  <div id="pf">
 
-  <!-- NAV -->
-  <nav id="nav">
-    <a href="#hero" class="nlogo">GIRI.DEV</a>
-    <ul class="nlinks">
-      <li><a href="#exp">Experience</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#edu">Education</a></li>
-      <li><a href="#ach">Awards</a></li>
-      <li><a href="#pub">Research</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <div class="dind">
-      <span id="dtext">0m</span>
-      <div class="dbar"><div class="dbar-f" id="dfl"></div></div>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section id="hero" class="sec">
-    <div class="si" style="align-items:center;display:flex;flex-direction:column;">
-      <div class="hbadge"><span class="hdot"></span>Open to Opportunities</div>
-      <h1 class="hname">Giripriyan S</h1>
-      <p class="hrole">Artificial Intelligence &amp; Machine Learning</p>
-      <p class="hloc">&#128205; Coimbatore, India &nbsp;&middot;&nbsp; B.Tech AIML 2023&ndash;2027</p>
-      <div class="hlinks">
-        <a href="mailto:giri2006priyan@gmail.com" class="hlbtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email</a>
-        <a href="https://www.linkedin.com/in/giripriyan-s" target="_blank" class="hlbtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a>
-        <a href="https://github.com/giripriyansenthilkumar" target="_blank" class="hlbtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>GitHub</a>
-        <a href="https://leetcode.com/u/giripriyansenthilkumar/" target="_blank" class="hlbtn">&#128187; LeetCode</a>
-        <a href="tel:+919789187415" class="hlbtn">&#128222; +91 97891 87415</a>
+    <!-- NAV -->
+    <nav id="nav">
+      <a href="#hero" class="nlogo">GIRI.DEV</a>
+      <ul class="nlinks">
+        <li><a href="#exp">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#edu">Education</a></li>
+        <li><a href="#ach">Awards</a></li>
+        <li><a href="#pub">Research</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="dind">
+        <span id="dtext">0m</span>
+        <div class="dbar">
+          <div class="dbar-f" id="dfl"></div>
+        </div>
       </div>
-      <p class="hptext">Aspiring AI &amp; ML developer with hands-on experience building intelligent systems using Python, Flask, MongoDB, NLP, and Computer Vision. Hackathon finalist, published researcher, and Intel&reg; Unnati intern &mdash; passionate about real-world AI, robotics, and data-driven systems.</p>
-    </div>
-    <div class="scrollcue"><div class="scline"></div><span class="sctext">Dive Deeper</span></div>
-  </section>
+    </nav>
 
-  <!-- EXPERIENCE -->
-  <section id="exp" class="sec">
-    <div class="si">
-      <span class="sdl">&asymp; 50m depth &middot; Sunlit Zone</span>
-      <h2 class="stitle">Experience</h2>
-      <div class="egrid rst">
-        <div class="gc">
-          <div class="gcs"></div>
-          <div class="eh">
-            <div>
-              <div class="eco">Intel&reg; Unnati Industrial Training 2025</div>
-              <div class="ero">AI / ML Intern</div>
-              <div class="edur">Oct 6 &ndash; Dec 20, 2025 &nbsp;&middot;&nbsp; 10 Weeks</div>
+    <!-- HERO -->
+    <section id="hero" class="sec">
+      <div class="si" style="align-items:center;display:flex;flex-direction:column;">
+        <div class="hbadge"><span class="hdot"></span>Open to Opportunities</div>
+        <h1 class="hname">Giripriyan S</h1>
+        <p class="hrole">Artificial Intelligence &amp; Machine Learning</p>
+        <p class="hloc">&#128205; Coimbatore, India &nbsp;&middot;&nbsp; B.Tech AIML 2023&ndash;2027</p>
+        <div class="hlinks">
+          <a href="mailto:giri2006priyan@gmail.com" class="hlbtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>Email</a>
+          <a href="https://www.linkedin.com/in/giripriyan-s" target="_blank" class="hlbtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>LinkedIn</a>
+          <a href="https://github.com/giripriyansenthilkumar" target="_blank" class="hlbtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+              <path d="M9 18c-4.51 2-5-2-7-2" />
+            </svg>GitHub</a>
+          <a href="https://leetcode.com/u/giripriyansenthilkumar/" target="_blank" class="hlbtn">&#128187; LeetCode</a>
+          <a href="tel:+919789187415" class="hlbtn">&#128222; +91 97891 87415</a>
+        </div>
+        <p class="hptext">Aspiring AI &amp; ML developer with hands-on experience building intelligent systems using
+          Python, Flask, MongoDB, NLP, and Computer Vision. Hackathon finalist, published researcher, and Intel&reg;
+          Unnati intern &mdash; passionate about real-world AI, robotics, and data-driven systems.</p>
+      </div>
+      <div class="scrollcue">
+        <div class="scline"></div><span class="sctext">Dive Deeper</span>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="exp" class="sec">
+      <div class="si">
+        <span class="sdl">&asymp; 50m depth &middot; Sunlit Zone</span>
+        <h2 class="stitle">Experience</h2>
+        <div class="egrid rst">
+          <div class="gc">
+            <div class="gcs"></div>
+            <div class="eh">
+              <div>
+                <div class="eco">Intel&reg; Unnati Industrial Training 2025</div>
+                <div class="ero">AI / ML Intern</div>
+                <div class="edur">Oct 6 &ndash; Dec 20, 2025 &nbsp;&middot;&nbsp; 10 Weeks</div>
+              </div>
+              <span class="ebadge">Internship</span>
             </div>
-            <span class="ebadge">Internship</span>
-          </div>
-          <ul class="ebl">
-            <li>Built an AI-powered fashion image similarity search &amp; recommendation system using a Triplet Network (ResNet50 + FAISS) &mdash; no keyword search needed.</li>
-            <li>Achieved ~95% top-5 retrieval accuracy with sub-second response times using cosine similarity ranking, FastAPI backend, and Docker-based deployment.</li>
-            <li>Collaborated within a team to deliver the full pipeline end-to-end (data &rarr; model &rarr; API &rarr; UI), following structured timelines and producing technical documentation.</li>
-          </ul>
-          <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:7px;">
-            <span class="emet">~95% top-5 accuracy</span>
-            <span class="emet">Sub-second latency</span>
-            <span class="emet">Docker deployed</span>
-          </div>
-        </div>
-        <div class="gc" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);">
-          <div class="gcs"></div>
-          <div class="eh">
-            <div>
-              <div class="eco" style="color:var(--gold)">Current Status</div>
-              <div class="ero">Fresher &mdash; B.Tech AIML, Year 2</div>
-              <div class="edur">Sri Shakthi Institute of Engineering and Technology &middot; 2023&ndash;2027</div>
+            <ul class="ebl">
+              <li>Built an AI-powered fashion image similarity search &amp; recommendation system using a Triplet
+                Network (ResNet50 + FAISS) &mdash; no keyword search needed.</li>
+              <li>Achieved ~95% top-5 retrieval accuracy with sub-second response times using cosine similarity ranking,
+                FastAPI backend, and Docker-based deployment.</li>
+              <li>Collaborated within a team to deliver the full pipeline end-to-end (data &rarr; model &rarr; API
+                &rarr; UI), following structured timelines and producing technical documentation.</li>
+            </ul>
+            <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:7px;">
+              <span class="emet">~95% top-5 accuracy</span>
+              <span class="emet">Sub-second latency</span>
+              <span class="emet">Docker deployed</span>
             </div>
-            <span class="ebadge" style="border-color:rgba(0,229,255,.4);color:var(--teal)">CGPA 8.63</span>
           </div>
-          <ul class="ebl">
-            <li>No prior full-time experience &mdash; actively building skills through hackathons, internships, and independent AI/ML projects.</li>
-            <li>Published research author, top-100 HackIndia participant (50,000+ entrants), and multiple hackathon finalist.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section id="skills" class="sec">
-    <div class="si">
-      <span class="sdl">&asymp; 150m depth &middot; Twilight Zone</span>
-      <h2 class="stitle">Skills</h2>
-      <div class="sgrid rst">
-        <div class="gc skill-category">
-          <div class="gcs"></div>
-          <span class="scat-ic">&#129504;</span>
-          <div class="scat-n">AI &amp; Machine Learning</div>
-          <div class="stags">
-            <span class="stag">Machine Learning</span><span class="stag">Computer Vision</span>
-            <span class="stag">Data Preprocessing</span><span class="stag">PyTorch</span>
-            <span class="stag">TensorFlow</span><span class="stag">Prompt Engineering</span>
-          </div>
-        </div>
-        <div class="gc skill-category">
-          <div class="gcs"></div>
-          <span class="scat-ic">&#128483;</span>
-          <div class="scat-n">Natural Language Processing</div>
-          <div class="stags">
-            <span class="stag">Whisper</span><span class="stag">Tokenization</span>
-            <span class="stag">Transformers</span><span class="stag">LLMs</span>
-            <span class="stag">RAG</span><span class="stag">Embeddings</span>
-            <span class="stag">Sentence Transformers</span>
-          </div>
-        </div>
-        <div class="gc skill-category">
-          <div class="gcs"></div>
-          <span class="scat-ic">&#128187;</span>
-          <div class="scat-n">Programming</div>
-          <div class="stags">
-            <span class="stag">Python</span><span class="stag">C</span>
-            <span class="stag">SQL</span><span class="stag">HTML</span><span class="stag">CSS</span>
-          </div>
-        </div>
-        <div class="gc skill-category">
-          <div class="gcs"></div>
-          <span class="scat-ic">&#128295;</span>
-          <div class="scat-n">Tools &amp; Frameworks</div>
-          <div class="stags">
-            <span class="stag">Flask</span><span class="stag">FastAPI</span><span class="stag">PyQt</span>
-            <span class="stag">Git</span><span class="stag">VS Code</span><span class="stag">Colab</span>
-            <span class="stag">Anaconda</span><span class="stag">OpenCV</span>
-            <span class="stag">Docker</span><span class="stag">MongoDB</span><span class="stag">FAISS</span>
-          </div>
-        </div>
-        <div class="gc skill-category">
-          <div class="gcs"></div>
-          <span class="scat-ic">&#129309;</span>
-          <div class="scat-n">Professional Skills</div>
-          <div class="stags">
-            <span class="stag">Problem-solving</span><span class="stag">Collaboration</span>
-            <span class="stag">Adaptability</span><span class="stag">Team Management</span>
-            <span class="stag">Leadership</span><span class="stag">Time Management</span>
-            <span class="stag">Attention to Detail</span>
-          </div>
-        </div>
-        <div class="gc skill-category">
-          <div class="gcs"></div>
-          <span class="scat-ic">&#127919;</span>
-          <div class="scat-n">Domain Expertise</div>
-          <div class="stags">
-            <span class="stag">Video Recording</span><span class="stag">Data Collection</span>
-            <span class="stag">Quality Control</span><span class="stag">OCR (EasyOCR)</span>
-            <span class="stag">Privacy Compliance</span><span class="stag">Wav2Lip</span>
-            <span class="stag">Triplet Networks</span>
+          <div class="gc" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);">
+            <div class="gcs"></div>
+            <div class="eh">
+              <div>
+                <div class="eco" style="color:var(--gold)">Current Status</div>
+                <div class="ero">Fresher &mdash; B.Tech AIML, </div>
+                <div class="edur">Sri Shakthi Institute of Engineering and Technology &middot; 2023&ndash;2027</div>
+              </div>
+              <span class="ebadge" style="border-color:rgba(0,229,255,.4);color:var(--teal)">CGPA 8.63</span>
+            </div>
+            <ul class="ebl">
+              <li>No prior full-time experience &mdash; actively building skills through hackathons, internships, and
+                independent AI/ML projects.</li>
+              <li>Published research author, top-100 HackIndia participant (50,000+ entrants), and multiple hackathon
+                finalist.</li>
+            </ul>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- PROJECTS -->
-  <section id="projects" class="sec">
-    <div class="si">
-      <span class="sdl">&asymp; 400m depth &middot; Midnight Zone</span>
-      <h2 class="stitle">Projects</h2>
-      <div class="pgrid rst">
-        <div class="gc" style="position:relative;">
-          <div class="gcs"></div>
-          <span class="pnum">01</span>
-          <div class="pstack">
-            <span class="ptag">Python</span><span class="ptag">Whisper</span><span class="ptag">NLLB-200</span>
-            <span class="ptag">MarianMT</span><span class="ptag">Coqui XTTS</span><span class="ptag">Wav2Lip</span>
-            <span class="ptag">OpenCV</span><span class="ptag">FFmpeg</span><span class="ptag">PyQt</span>
+    <!-- SKILLS -->
+    <section id="skills" class="sec">
+      <div class="si">
+        <span class="sdl">&asymp; 150m depth &middot; Twilight Zone</span>
+        <h2 class="stitle">Skills</h2>
+        <div class="sgrid rst">
+          <div class="gc skill-category">
+            <div class="gcs"></div>
+            <span class="scat-ic">&#129504;</span>
+            <div class="scat-n">AI &amp; Machine Learning</div>
+            <div class="stags">
+              <span class="stag">Machine Learning</span><span class="stag">Computer Vision</span>
+              <span class="stag">Data Preprocessing</span><span class="stag">PyTorch</span>
+              <span class="stag">TensorFlow</span><span class="stag">Prompt Engineering</span>
+            </div>
           </div>
-          <h3 class="ptitle">VoiceFusion AI</h3>
-          <p class="psub">AI-Powered Multilingual Dubbing System</p>
-          <p class="pdesc">End-to-end AI dubbing pipeline that translates English movie dialogues into natural Tamil while preserving the original speaker's voice, emotion, and lip synchronization. Integrates Whisper (ASR), NLLB-200/MarianMT (translation), Coqui XTTS (voice cloning), and Wav2Lip with OpenCV/FFmpeg for realistic video rendering.</p>
-          <a href="https://github.com/giripriyansenthilkumar/VoiceFusionAI" target="_blank" class="plink">&#128279; View on GitHub &rarr;</a>
-        </div>
-        <div class="gc" style="position:relative;">
-          <div class="gcs"></div>
-          <span class="pnum">02</span>
-          <div class="pstack">
-            <span class="ptag">Flask</span><span class="ptag">Whisper</span>
-            <span class="ptag">Sentence Transformers</span><span class="ptag">MongoDB</span><span class="ptag">NLP</span>
+          <div class="gc skill-category">
+            <div class="gcs"></div>
+            <span class="scat-ic">&#128483;</span>
+            <div class="scat-n">Natural Language Processing</div>
+            <div class="stags">
+              <span class="stag">Whisper</span><span class="stag">Tokenization</span>
+              <span class="stag">Transformers</span><span class="stag">LLMs</span>
+              <span class="stag">RAG</span><span class="stag">Embeddings</span>
+              <span class="stag">Sentence Transformers</span>
+            </div>
           </div>
-          <h3 class="ptitle">FactWave</h3>
-          <p class="psub">Real-Time Misinformation Detection Tool</p>
-          <p class="pdesc">Real-time misinformation detection platform that converts live speech into text and validates claims using NLP-based semantic similarity. Implements exact matching, fuzzy matching, and transformer embeddings against verified facts in MongoDB, with an interactive Flask dashboard.</p>
-          <a href="https://github.com/giripriyansenthilkumar/FactWave" target="_blank" class="plink">&#128279; View on GitHub &rarr;</a>
-        </div>
-        <div class="gc" style="position:relative;">
-          <div class="gcs"></div>
-          <span class="pnum">03</span>
-          <div class="pstack">
-            <span class="ptag">Python</span><span class="ptag">Flask</span><span class="ptag">EasyOCR</span>
-            <span class="ptag">TensorFlow</span><span class="ptag">OpenCV</span><span class="ptag">MongoDB</span>
+          <div class="gc skill-category">
+            <div class="gcs"></div>
+            <span class="scat-ic">&#128187;</span>
+            <div class="scat-n">Programming</div>
+            <div class="stags">
+              <span class="stag">Python</span><span class="stag">C</span>
+              <span class="stag">SQL</span><span class="stag">HTML</span><span class="stag">CSS</span>
+            </div>
           </div>
-          <h3 class="ptitle">AI Approval Process Portal</h3>
-          <p class="psub">PMSSS Scholarship Automation System</p>
-          <p class="pdesc">AI-powered scholarship approval portal automating applicant verification using OCR, image preprocessing, and document validation. Applies OpenCV + EasyOCR for document extraction, semantic similarity checks, through a secure Flask and MongoDB workflow with privacy-compliant data handling.</p>
-          <a href="https://github.com/giripriyansenthilkumar/AI-POWERED-SCHOLARSHIP-APPROVAL-AND-MONITORING-SYSTEM-FOR-PMSSS.git" target="_blank" class="plink">&#128279; View on GitHub &rarr;</a>
-        </div>
-        <div class="gc" style="position:relative;border-color:rgba(0,180,255,.35);background:rgba(0,60,150,.08);">
-          <div class="gcs"></div>
-          <span class="pnum" style="color:rgba(0,229,255,.1)">04</span>
-          <div class="pstack">
-            <span class="ptag">ResNet50</span><span class="ptag">FAISS</span>
-            <span class="ptag">Triplet Network</span><span class="ptag">FastAPI</span><span class="ptag">Docker</span>
+          <div class="gc skill-category">
+            <div class="gcs"></div>
+            <span class="scat-ic">&#128295;</span>
+            <div class="scat-n">Tools &amp; Frameworks</div>
+            <div class="stags">
+              <span class="stag">Flask</span><span class="stag">FastAPI</span><span class="stag">PyQt</span>
+              <span class="stag">Git</span><span class="stag">VS Code</span><span class="stag">Colab</span>
+              <span class="stag">Anaconda</span><span class="stag">OpenCV</span>
+              <span class="stag">Docker</span><span class="stag">MongoDB</span><span class="stag">FAISS</span>
+            </div>
           </div>
-          <h3 class="ptitle">Fashion Image Similarity Search</h3>
-          <p class="psub">Intel&reg; Unnati Internship Project &middot; 2025</p>
-          <p class="pdesc">AI-powered fashion recommendation system using Triplet Network (ResNet50 + FAISS) that retrieves visually similar clothing from images with ~95% top-5 accuracy and sub-second response times. Full pipeline delivered end-to-end with Docker deployment.</p>
-          <span class="plink" style="color:var(--teal);border:none;">&#127942; Intel&reg; Unnati 2025 Intern Project</span>
+          <div class="gc skill-category">
+            <div class="gcs"></div>
+            <span class="scat-ic">&#129309;</span>
+            <div class="scat-n">Professional Skills</div>
+            <div class="stags">
+              <span class="stag">Problem-solving</span><span class="stag">Collaboration</span>
+              <span class="stag">Adaptability</span><span class="stag">Team Management</span>
+              <span class="stag">Leadership</span><span class="stag">Time Management</span>
+              <span class="stag">Attention to Detail</span>
+            </div>
+          </div>
+          <div class="gc skill-category">
+            <div class="gcs"></div>
+            <span class="scat-ic">&#127919;</span>
+            <div class="scat-n">Domain Expertise</div>
+            <div class="stags">
+              <span class="stag">Video Recording</span><span class="stag">Data Collection</span>
+              <span class="stag">Quality Control</span><span class="stag">OCR (EasyOCR)</span>
+              <span class="stag">Privacy Compliance</span><span class="stag">Wav2Lip</span>
+              <span class="stag">Triplet Networks</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- EDUCATION -->
-  <section id="edu" class="sec">
-    <div class="si">
-      <span class="sdl">&asymp; 800m depth &middot; Abyssal Zone</span>
-      <h2 class="stitle">Education</h2>
-      <div class="edug rst">
-        <div class="gc">
-          <div class="gcs"></div>
-          <div style="margin-bottom:11px;"><span style="font-family:'Exo 2',sans-serif;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--teal)">B.Tech &middot; 2023&ndash;2027</span></div>
-          <div class="edeg">Artificial Intelligence and Machine Learning</div>
-          <div class="esch">Sri Shakthi Institute of Engineering and Technology<br/>Coimbatore, Tamil Nadu, India</div>
-          <span class="escore">&#127891; CGPA: 8.63</span>
-        </div>
-        <div class="gc">
-          <div class="gcs"></div>
-          <div style="margin-bottom:11px;"><span style="font-family:'Exo 2',sans-serif;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--teal)">HSC &middot; Higher Secondary</span></div>
-          <div class="edeg">Higher Secondary Certificate (HSC)</div>
-          <div class="esch">GRD CPF Matric Hr Sec School<br/>Tamil Nadu, India</div>
-          <span class="escore">&#128203; Score: 83.3%</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ACHIEVEMENTS -->
-  <section id="ach" class="sec">
-    <div class="si">
-      <span class="sdl">&asymp; 1,200m depth &middot; Hadal Zone</span>
-      <h2 class="stitle">Achievements</h2>
-      <div class="agrid rst">
-        <div class="gc acard" style="border-color:rgba(255,215,0,.3);">
-          <div class="gcs"></div>
-          <span class="arank">&#127942; Top 100</span>
-          <div class="aev">HackIndia Hackathon</div>
-          <div class="adet">Selected from 50,000+ participants nationwide &mdash; one of the most competitive developer challenges in India.</div>
-        </div>
-        <div class="gc acard" style="border-color:rgba(0,229,255,.3);">
-          <div class="gcs"></div>
-          <span class="arank">&#129352; Finalist</span>
-          <div class="aev">Truth Tell Hackathon 2025</div>
-          <div class="adet">ICEA &mdash; Competed in misinformation detection challenge with FactWave, an NLP-powered real-time fact checker.</div>
-        </div>
-        <div class="gc acard" style="border-color:rgba(100,200,255,.3);">
-          <div class="gcs"></div>
-          <span class="arank">&#129352; Finalist</span>
-          <div class="aev">Hackademia 2025</div>
-          <div class="adet">Recognized among top teams for innovative AI-driven solution development.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CERTIFICATIONS -->
-  <section id="certs" class="sec">
-    <div class="si">
-      <span class="sdl">&asymp; 1,800m depth &middot; Ultra-Abyssal</span>
-      <h2 class="stitle">Certifications</h2>
-      <div class="cgrid rst">
-        <div class="gc ccard">
-          <div class="gcs"></div>
-          <div class="cicon">&#129302;</div>
-          <div><div class="cname">AI Developer</div><div class="ciss">C# Corner</div></div>
-        </div>
-        <div class="gc ccard">
-          <div class="gcs"></div>
-          <div class="cicon">&#128202;</div>
-          <div><div class="cname">Machine Learning</div><div class="ciss">NoviTech R&amp;D Pvt Ltd</div></div>
-        </div>
-        <div class="gc ccard">
-          <div class="gcs"></div>
-          <div class="cicon">&#128161;</div>
-          <div><div class="cname">Artificial Intelligence</div><div class="ciss">NoviTech R&amp;D Pvt Ltd</div></div>
+    <!-- PROJECTS -->
+    <section id="projects" class="sec">
+      <div class="si">
+        <span class="sdl">&asymp; 400m depth &middot; Midnight Zone</span>
+        <h2 class="stitle">Projects</h2>
+        <div class="pgrid rst">
+          <div class="gc" style="position:relative;">
+            <div class="gcs"></div>
+            <span class="pnum">01</span>
+            <div class="pstack">
+              <span class="ptag">Python</span><span class="ptag">Whisper</span><span class="ptag">NLLB-200</span>
+              <span class="ptag">MarianMT</span><span class="ptag">Coqui XTTS</span><span class="ptag">Wav2Lip</span>
+              <span class="ptag">OpenCV</span><span class="ptag">FFmpeg</span><span class="ptag">PyQt</span>
+            </div>
+            <h3 class="ptitle">VoiceFusion AI</h3>
+            <p class="psub">AI-Powered Multilingual Dubbing System</p>
+            <p class="pdesc">End-to-end AI dubbing pipeline that translates English movie dialogues into natural Tamil
+              while preserving the original speaker's voice, emotion, and lip synchronization. Integrates Whisper (ASR),
+              NLLB-200/MarianMT (translation), Coqui XTTS (voice cloning), and Wav2Lip with OpenCV/FFmpeg for realistic
+              video rendering.</p>
+            <a href="https://github.com/giripriyansenthilkumar/VoiceFusionAI" target="_blank" class="plink">&#128279;
+              View on GitHub &rarr;</a>
+          </div>
+          <div class="gc" style="position:relative;">
+            <div class="gcs"></div>
+            <span class="pnum">02</span>
+            <div class="pstack">
+              <span class="ptag">Flask</span><span class="ptag">Whisper</span>
+              <span class="ptag">Sentence Transformers</span><span class="ptag">MongoDB</span><span
+                class="ptag">NLP</span>
+            </div>
+            <h3 class="ptitle">FactWave</h3>
+            <p class="psub">Real-Time Misinformation Detection Tool</p>
+            <p class="pdesc">Real-time misinformation detection platform that converts live speech into text and
+              validates claims using NLP-based semantic similarity. Implements exact matching, fuzzy matching, and
+              transformer embeddings against verified facts in MongoDB, with an interactive Flask dashboard.</p>
+            <a href="https://github.com/giripriyansenthilkumar/FactWave" target="_blank" class="plink">&#128279; View on
+              GitHub &rarr;</a>
+          </div>
+          <div class="gc" style="position:relative;">
+            <div class="gcs"></div>
+            <span class="pnum">03</span>
+            <div class="pstack">
+              <span class="ptag">Python</span><span class="ptag">Flask</span><span class="ptag">EasyOCR</span>
+              <span class="ptag">TensorFlow</span><span class="ptag">OpenCV</span><span class="ptag">MongoDB</span>
+            </div>
+            <h3 class="ptitle">AI Approval Process Portal</h3>
+            <p class="psub">PMSSS Scholarship Automation System</p>
+            <p class="pdesc">AI-powered scholarship approval portal automating applicant verification using OCR, image
+              preprocessing, and document validation. Applies OpenCV + EasyOCR for document extraction, semantic
+              similarity checks, through a secure Flask and MongoDB workflow with privacy-compliant data handling.</p>
+            <a href="https://github.com/giripriyansenthilkumar/AI-POWERED-SCHOLARSHIP-APPROVAL-AND-MONITORING-SYSTEM-FOR-PMSSS.git"
+              target="_blank" class="plink">&#128279; View on GitHub &rarr;</a>
+          </div>
+          <div class="gc" style="position:relative;border-color:rgba(0,180,255,.35);background:rgba(0,60,150,.08);">
+            <div class="gcs"></div>
+            <span class="pnum" style="color:rgba(0,229,255,.1)">04</span>
+            <div class="pstack">
+              <span class="ptag">ResNet50</span><span class="ptag">FAISS</span>
+              <span class="ptag">Triplet Network</span><span class="ptag">FastAPI</span><span class="ptag">Docker</span>
+            </div>
+            <h3 class="ptitle">Fashion Image Similarity Search</h3>
+            <p class="psub">Intel&reg; Unnati Internship Project &middot; 2025</p>
+            <p class="pdesc">AI-powered fashion recommendation system using Triplet Network (ResNet50 + FAISS) that
+              retrieves visually similar clothing from images with ~95% top-5 accuracy and sub-second response times.
+              Full pipeline delivered end-to-end with Docker deployment.</p>
+            <span class="plink" style="color:var(--teal);border:none;">&#127942; Intel&reg; Unnati 2025 Intern
+              Project</span>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- PUBLICATIONS -->
-  <section id="pub" class="sec">
-    <div class="si">
-      <span class="sdl">&asymp; 3,000m depth &middot; Deep Ocean Trench</span>
-      <h2 class="stitle">Research &amp; Publications</h2>
-      <div class="reveal">
-        <div class="gc" style="border-color:rgba(0,229,255,.4);max-width:760px;">
-          <div class="gcs"></div>
-          <span style="font-size:.62rem;font-family:'Exo 2',sans-serif;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,229,255,.5);margin-bottom:11px;display:block;">Peer-Reviewed Journal Article</span>
-          <div class="pj">IJARESM &mdash; International Journal of Advanced Research in Engineering, Science &amp; Management</div>
-          <h3 class="ptitle2">VoiceFusion AI: An AI-Driven Multilingual Audio-Visual Sync</h3>
-          <div class="pdate">Published: May 2025</div>
-          <a href="https://www.ijaresm.com/uploaded_files/document_file/Giripriyan_SOL9E.pdf" target="_blank" class="publink">&#128279; Read Publication &rarr;</a>
+    <!-- EDUCATION -->
+    <section id="edu" class="sec">
+      <div class="si">
+        <span class="sdl">&asymp; 800m depth &middot; Abyssal Zone</span>
+        <h2 class="stitle">Education</h2>
+        <div class="edug rst">
+          <div class="gc">
+            <div class="gcs"></div>
+            <div style="margin-bottom:11px;"><span
+                style="font-family:'Exo 2',sans-serif;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--teal)">B.Tech
+                &middot; 2023&ndash;2027</span></div>
+            <div class="edeg">Artificial Intelligence and Machine Learning</div>
+            <div class="esch">Sri Shakthi Institute of Engineering and Technology<br />Coimbatore, Tamil Nadu, India
+            </div>
+            <span class="escore">&#127891; CGPA: 8.63</span>
+          </div>
+          <div class="gc">
+            <div class="gcs"></div>
+            <div style="margin-bottom:11px;"><span
+                style="font-family:'Exo 2',sans-serif;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--teal)">HSC
+                &middot; Higher Secondary</span></div>
+            <div class="edeg">Higher Secondary Certificate (HSC)</div>
+            <div class="esch">GRD CPF Matric Hr Sec School<br />Tamil Nadu, India</div>
+            <span class="escore">&#128203; Score: 83.3%</span>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CONTACT -->
-  <section id="contact" class="sec" style="text-align:center;align-items:center;">
-    <div class="si" style="display:flex;flex-direction:column;align-items:center;">
-      <span class="sdl">Surface &middot; Return to Light</span>
-      <h2 class="stitle" style="text-align:center;">Let&rsquo;s Connect</h2>
-      <p class="csub">I&rsquo;m open to internships, research collaborations, and exciting AI/ML opportunities.<br/>Reach out &mdash; let&rsquo;s build something extraordinary together.</p>
-      <div class="clinks rst">
-        <a href="mailto:giri2006priyan@gmail.com" class="cbtn">&#128140; giri2006priyan@gmail.com</a>
-        <a href="tel:+919789187415" class="cbtn">&#128222; +91 97891 87415</a>
-        <a href="https://www.linkedin.com/in/giripriyan-s" target="_blank" class="cbtn">&#128101; LinkedIn</a>
-        <a href="https://github.com/giripriyansenthilkumar" target="_blank" class="cbtn">&#128008; GitHub</a>
-        <a href="https://leetcode.com/u/giripriyansenthilkumar/" target="_blank" class="cbtn">&#128187; LeetCode</a>
+    <!-- ACHIEVEMENTS -->
+    <section id="ach" class="sec">
+      <div class="si">
+        <span class="sdl">&asymp; 1,200m depth &middot; Hadal Zone</span>
+        <h2 class="stitle">Achievements</h2>
+        <div class="agrid rst">
+          <div class="gc acard" style="border-color:rgba(255,215,0,.3);">
+            <div class="gcs"></div>
+            <span class="arank">&#127942; Top 100</span>
+            <div class="aev">HackIndia Hackathon</div>
+            <div class="adet">Selected from 50,000+ participants nationwide &mdash; one of the most competitive
+              developer challenges in India.</div>
+          </div>
+          <div class="gc acard" style="border-color:rgba(0,229,255,.3);">
+            <div class="gcs"></div>
+            <span class="arank">&#129352; Finalist</span>
+            <div class="aev">Truth Tell Hackathon 2025</div>
+            <div class="adet">ICEA &mdash; Competed in misinformation detection challenge with FactWave, an NLP-powered
+              real-time fact checker.</div>
+          </div>
+          <div class="gc acard" style="border-color:rgba(100,200,255,.3);">
+            <div class="gcs"></div>
+            <span class="arank">&#129352; Finalist</span>
+            <div class="aev">Hackademia 2025</div>
+            <div class="adet">Recognized among top teams for innovative AI-driven solution development.</div>
+          </div>
+        </div>
       </div>
-      <p class="ftline">&copy; 2025 Giripriyan S &middot; Crafted with passion from the depths of Coimbatore, India</p>
-    </div>
-  </section>
+    </section>
 
-</div><!-- /#pf -->
+    <!-- CERTIFICATIONS -->
+    <section id="certs" class="sec">
+      <div class="si">
+        <span class="sdl">&asymp; 1,800m depth &middot; Ultra-Abyssal</span>
+        <h2 class="stitle">Certifications</h2>
+        <div class="cgrid rst">
+          <div class="gc ccard">
+            <div class="gcs"></div>
+            <div class="cicon">&#129302;</div>
+            <div>
+              <div class="cname">AI Developer</div>
+              <div class="ciss">C# Corner</div>
+            </div>
+          </div>
+          <div class="gc ccard">
+            <div class="gcs"></div>
+            <div class="cicon">&#128202;</div>
+            <div>
+              <div class="cname">Machine Learning</div>
+              <div class="ciss">NoviTech R&amp;D Pvt Ltd</div>
+            </div>
+          </div>
+          <div class="gc ccard">
+            <div class="gcs"></div>
+            <div class="cicon">&#128161;</div>
+            <div>
+              <div class="cname">Artificial Intelligence</div>
+              <div class="ciss">NoviTech R&amp;D Pvt Ltd</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script>
-/* ===================================================
-   STARS
-=================================================== */
-(function(){
-  const c=document.getElementById('wst');
-  for(let i=0;i<160;i++){
-    const s=document.createElement('div');
-    s.className='wstar';
-    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*78}%;width:${(Math.random()*2+.8).toFixed(1)}px;height:${(Math.random()*2+.8).toFixed(1)}px;--d:${(Math.random()*4+1).toFixed(1)}s;--o:${(Math.random()*.7+.2).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
-    c.appendChild(s);
-  }
-})();
+    <!-- PUBLICATIONS -->
+    <section id="pub" class="sec">
+      <div class="si">
+        <span class="sdl">&asymp; 3,000m depth &middot; Deep Ocean Trench</span>
+        <h2 class="stitle">Research &amp; Publications</h2>
+        <div class="reveal">
+          <div class="gc" style="border-color:rgba(0,229,255,.4);max-width:760px;">
+            <div class="gcs"></div>
+            <span
+              style="font-size:.62rem;font-family:'Exo 2',sans-serif;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,229,255,.5);margin-bottom:11px;display:block;">Peer-Reviewed
+              Journal Article</span>
+            <div class="pj">IJARESM &mdash; International Journal of Advanced Research in Engineering, Science &amp;
+              Management</div>
+            <h3 class="ptitle2">VoiceFusion AI: An AI-Driven Multilingual Audio-Visual Sync</h3>
+            <div class="pdate">Published: May 2025</div>
+            <a href="https://www.ijaresm.com/uploaded_files/document_file/Giripriyan_SOL9E.pdf" target="_blank"
+              class="publink">&#128279; Read Publication &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-/* ===================================================
-   WAVE ANIMATION (WELCOME)
-=================================================== */
-(function(){
-  const w1=document.getElementById('wv1'),w2=document.getElementById('wv2');
-  let t=0;
-  function wave(amp,freq,ph,W,H){
-    let d=`M 0 ${H}`;
-    for(let x=0;x<=W;x+=5){
-      const y=H*.5+Math.sin((x/W*freq*Math.PI*2)+ph)*amp+Math.sin((x/W*freq*1.6*Math.PI*2)+ph*.7)*(amp*.35);
-      d+=` L ${x} ${y}`;
-    }
-    return d+` L ${W} ${H} L 0 ${H} Z`;
-  }
-  function tick(){
-    t+=.012;
-    w1.setAttribute('d',wave(22,3,t,1440,110));
-    w2.setAttribute('d',wave(14,2,t+1.2,1440,110));
-    requestAnimationFrame(tick);
-  }
-  tick();
-})();
+    <!-- CONTACT -->
+    <section id="contact" class="sec" style="text-align:center;align-items:center;">
+      <div class="si" style="display:flex;flex-direction:column;align-items:center;">
+        <span class="sdl">Surface &middot; Return to Light</span>
+        <h2 class="stitle" style="text-align:center;">Let&rsquo;s Connect</h2>
+        <p class="csub">I&rsquo;m open to internships, research collaborations, and exciting AI/ML
+          opportunities.<br />Reach out &mdash; let&rsquo;s build something extraordinary together.</p>
+        <div class="clinks rst">
+          <a href="mailto:giri2006priyan@gmail.com" class="cbtn">&#128140; giri2006priyan@gmail.com</a>
+          <a href="tel:+919789187415" class="cbtn">&#128222; +91 97891 87415</a>
+          <a href="https://www.linkedin.com/in/giripriyan-s" target="_blank" class="cbtn">&#128101; LinkedIn</a>
+          <a href="https://github.com/giripriyansenthilkumar" target="_blank" class="cbtn">&#128008; GitHub</a>
+          <a href="https://leetcode.com/u/giripriyansenthilkumar/" target="_blank" class="cbtn">&#128187; LeetCode</a>
+        </div>
+        <p class="ftline">&copy; 2025 Giripriyan S &middot; Crafted with passion from the depths of Coimbatore, India
+        </p>
+      </div>
+    </section>
 
-/* ===================================================
-   OCEAN CANVAS ENGINE
-=================================================== */
-const cvs=document.getElementById('oc'),ctx=cvs.getContext('2d');
-let W=0,H=0;
-function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
+  </div><!-- /#pf -->
 
-let scrollDepth=0;
-
-const DZ=[
-  {d:0,   r:0,g:70, b:155},
-  {d:.12, r:0,g:58, b:135},
-  {d:.25, r:0,g:42, b:110},
-  {d:.40, r:0,g:28, b:85 },
-  {d:.55, r:0,g:18, b:62 },
-  {d:.70, r:0,g:10, b:42 },
-  {d:.85, r:0,g:5,  b:26 },
-  {d:1,   r:0,g:2,  b:12 },
-];
-
-function getColor(d){
-  let lo=DZ[0],hi=DZ[DZ.length-1];
-  for(let i=0;i<DZ.length-1;i++){
-    if(d>=DZ[i].d&&d<=DZ[i+1].d){lo=DZ[i];hi=DZ[i+1];break;}
-  }
-  const t=(d-lo.d)/(hi.d-lo.d||1);
-  return{r:Math.round(lo.r+(hi.r-lo.r)*t),g:Math.round(lo.g+(hi.g-lo.g)*t),b:Math.round(lo.b+(hi.b-lo.b)*t)};
-}
-
-/* Bubbles */
-class Bub{
-  constructor(){this.reset(true);}
-  reset(init){
-    this.x=Math.random()*W;
-    this.y=init?Math.random()*H:H+20;
-    this.r=Math.random()*5.5+1.2;
-    this.vy=-(Math.random()*.7+.18);
-    this.vx=(Math.random()-.5)*.28;
-    this.osc=Math.random()*Math.PI*2;
-    this.os=Math.random()*.045+.01;
-    this.oa=Math.random()*1.6+.3;
-    this.al=Math.random()*.5+.15;
-  }
-  update(){this.y+=this.vy;this.osc+=this.os;this.x+=Math.sin(this.osc)*this.oa*.28+this.vx;if(this.y+this.r<0)this.reset();}
-  draw(c,col){
-    const g=c.createRadialGradient(this.x-this.r*.3,this.y-this.r*.3,0,this.x,this.y,this.r);
-    g.addColorStop(0,`rgba(255,255,255,${this.al*.9})`);
-    g.addColorStop(.55,`rgba(${col.r+55},${col.g+75},${col.b+80},${this.al*.38})`);
-    g.addColorStop(1,`rgba(${col.r},${col.g+35},${col.b+55},0)`);
-    c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);
-    c.fillStyle=g;c.fill();
-    c.strokeStyle=`rgba(255,255,255,${this.al*.45})`;c.lineWidth=.5;c.stroke();
-  }
-}
-const BUBS=Array.from({length:60},()=>new Bub());
-
-/* Light rays */
-class Ray{
-  constructor(i,n){
-    this.i=i;this.n=n;
-    this.bx=(i/(n-1))*W*1.5-W*.25;
-    this.angle=(Math.random()-.5)*.22;
-    this.width=Math.random()*65+25;
-    this.al=Math.random()*.075+.018;
-    this.spd=(Math.random()-.5)*.0005;
-    this.wave=Math.random()*Math.PI*2;
-  }
-  update(){this.wave+=.005;this.angle+=this.spd;}
-  draw(c,dep){
-    if(dep>.78)return;
-    const op=Math.max(0,(1-dep*1.28));
-    const sp=Math.sin(this.wave)*14;
-    const x0=this.bx+sp,len=H*1.6;
-    const x1=x0+Math.sin(this.angle)*len;
-    const g=c.createLinearGradient(x0,0,x1,len);
-    g.addColorStop(0,`rgba(120,230,255,${this.al*op*2.8})`);
-    g.addColorStop(.3,`rgba(60,180,255,${this.al*op})`);
-    g.addColorStop(1,`rgba(0,80,200,0)`);
-    const hw=this.width/2;
-    c.save();c.beginPath();
-    c.moveTo(x0-hw,0);c.lineTo(x0+hw,0);
-    c.lineTo(x1+hw*.14,len);c.lineTo(x1-hw*.14,len);
-    c.closePath();c.fillStyle=g;c.fill();c.restore();
-  }
-}
-const RAYS=Array.from({length:9},(_,i)=>new Ray(i,9));
-
-/* Particles */
-class Part{
-  constructor(){this.reset(true);}
-  reset(init){
-    this.x=Math.random()*W;
-    this.y=init?Math.random()*H:H+10;
-    this.sz=Math.random()*1.8+.3;
-    this.vy=-(Math.random()*.25+.05);
-    this.vx=(Math.random()-.5)*.18;
-    this.al=Math.random()*.35+.05;
-  }
-  update(){this.x+=this.vx;this.y+=this.vy;if(this.y<0)this.reset();}
-  draw(c,col){c.beginPath();c.arc(this.x,this.y,this.sz,0,Math.PI*2);c.fillStyle=`rgba(${col.r+75},${col.g+100},${col.b+80},${this.al})`;c.fill();}
-}
-const PARTS=Array.from({length:85},()=>new Part());
-
-/* Caustics */
-let cT=0;
-function caustics(c,col,dep){
-  if(dep>.62)return;
-  const al=Math.max(0,(.62-dep)*.09);
-  cT+=.005;c.save();c.globalAlpha=al;
-  for(let i=0;i<20;i++){
-    const cx=(i/20)*W*1.5-W*.25+Math.sin(cT*.7+i)*38;
-    const cy=H*.58+Math.cos(cT*.5+i*.75)*28;
-    const r=22+Math.sin(cT+i*.6)*14;
-    const g=c.createRadialGradient(cx,cy,0,cx,cy,r);
-    g.addColorStop(0,`rgba(${col.r+75},${col.g+100},${col.b+100},.65)`);
-    g.addColorStop(1,`rgba(0,0,0,0)`);
-    c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.fillStyle=g;c.fill();
-  }
-  c.restore();
-}
-
-function draw(){
-  const col=getColor(scrollDepth);
-  const bg=ctx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,`rgb(${col.r},${col.g},${col.b})`);
-  bg.addColorStop(.42,`rgb(${Math.max(0,col.r-2)},${Math.max(0,col.g-9)},${Math.max(0,col.b-18)})`);
-  bg.addColorStop(1,`rgb(0,${Math.max(0,col.g>>2)},${Math.max(0,col.b>>1)})`);
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-
-  ctx.save();ctx.globalCompositeOperation='screen';
-  RAYS.forEach(r=>{r.update();r.draw(ctx,scrollDepth);});
-  ctx.restore();
-
-  caustics(ctx,col,scrollDepth);
-  PARTS.forEach(p=>{p.update();p.draw(ctx,col);});
-  BUBS.forEach(b=>{b.update();b.draw(ctx,col);});
-
-  if(scrollDepth<.32){
-    const a=(1-scrollDepth/.32)*.17;
-    const sg=ctx.createLinearGradient(0,0,0,H*.15);
-    sg.addColorStop(0,`rgba(160,230,255,${a})`);sg.addColorStop(1,`rgba(0,100,200,0)`);
-    ctx.fillStyle=sg;ctx.fillRect(0,0,W,H*.15);
-  }
-
-  const vg=ctx.createRadialGradient(W/2,H/2,H*.3,W/2,H/2,H*.9);
-  vg.addColorStop(0,'rgba(0,0,0,0)');
-  vg.addColorStop(1,`rgba(0,0,${Math.max(0,col.b>>3)},.5)`);
-  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
-
-  requestAnimationFrame(draw);
-}
-
-/* ===================================================
-   THREE.JS DIVER CURSOR — Real GLB model follows cursor
-   Uses vanilla Three.js via CDN importmap
-=================================================== */
-let mx={x:W/2,y:H/2},dp={x:W/2,y:H/2},pp={x:W/2,y:H/2},dang=0,lastBub=0;
-
-window.addEventListener('mousemove',e=>{mx.x=e.clientX;mx.y=e.clientY;});
-
-function spawnBub(x,y){
-  const b=document.createElement('div');
-  b.className='dbub';
-  const sz=Math.random()*6+2;
-  b.style.cssText=`left:${x+(Math.random()-.5)*15}px;top:${y-18}px;width:${sz}px;height:${sz}px;--dur:${(Math.random()*1.2+.9).toFixed(1)}s;`;
-  document.body.appendChild(b);
-  setTimeout(()=>b.remove(),2100);
-}
-
-// ---- Three.js diver scene ----
-(async function initDiver(){
-  const THREE = await import('three');
-  const { GLTFLoader } = await import('https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js');
-
-  const canvas = document.getElementById('diver-canvas');
-  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0x000000, 0); // transparent
-  renderer.shadowMap.enabled = true;
-
-  // Orthographic camera: maps NDC [-1,1] to screen pixels
-  const cam = new THREE.OrthographicCamera(
-    -window.innerWidth/2,  window.innerWidth/2,
-     window.innerHeight/2, -window.innerHeight/2,
-    -1000, 1000
-  );
-  cam.position.set(0,0,10);
-  cam.lookAt(0,0,0);
-
-  const scene = new THREE.Scene();
-
-  // Underwater-tinted lights matching the portfolio aesthetic
-  const ambLight = new THREE.AmbientLight(0x88aacc, 0.5);
-  scene.add(ambLight);
-  const dirLight = new THREE.DirectionalLight(0xbfefff, 1.4);
-  dirLight.position.set(3,8,5);
-  dirLight.castShadow = true;
-  scene.add(dirLight);
-  const rimLight = new THREE.PointLight(0x00e5ff, 1.2, 300);
-  rimLight.position.set(-4,4,6);
-  scene.add(rimLight);
-
-  // Resize handler
-  window.addEventListener('resize',()=>{
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    cam.left   = -window.innerWidth/2;
-    cam.right  =  window.innerWidth/2;
-    cam.top    =  window.innerHeight/2;
-    cam.bottom = -window.innerHeight/2;
-    cam.updateProjectionMatrix();
-  });
-
-  let diverMesh = null;
-  let mixer = null;
-  const clock = new THREE.Clock();
-
-  // Determine scale from model bounding box — target ~110px tall on screen
-  function fitModel(gltf){
-    const box = new THREE.Box3().setFromObject(gltf.scene);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    // We want the model to appear ~110 screen-pixels tall
-    const targetPx = 110;
-    const modelWorldH = size.y;
-    const scl = targetPx / modelWorldH;
-    gltf.scene.scale.setScalar(scl);
-    // Re-center pivot so model center aligns with cursor
-    gltf.scene.position.sub(center.multiplyScalar(scl));
-    // Rotate to face camera (models usually face +Z or -Z)
-    gltf.scene.rotation.y = Math.PI;
-    return gltf.scene;
-  }
-
-  // Load diver.glb — served from portfolio root
-  const loader = new GLTFLoader();
-  loader.load(
-    'diver.glb',
-    (gltf)=>{
-      diverMesh = fitModel(gltf);
-      scene.add(diverMesh);
-      if(gltf.animations && gltf.animations.length){
-        mixer = new THREE.AnimationMixer(diverMesh);
-        // Play all clips (swimming/idle)
-        gltf.animations.forEach(clip=>mixer.clipAction(clip).play());
+  <script>
+    /* ===================================================
+       STARS
+    =================================================== */
+    (function () {
+      const c = document.getElementById('wst');
+      for (let i = 0; i < 160; i++) {
+        const s = document.createElement('div');
+        s.className = 'wstar';
+        s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 78}%;width:${(Math.random() * 2 + .8).toFixed(1)}px;height:${(Math.random() * 2 + .8).toFixed(1)}px;--d:${(Math.random() * 4 + 1).toFixed(1)}s;--o:${(Math.random() * .7 + .2).toFixed(2)};animation-delay:${(Math.random() * 5).toFixed(1)}s;`;
+        c.appendChild(s);
       }
-    },
-    undefined,
-    (err)=>console.warn('diver.glb load error',err)
-  );
+    })();
 
-  // Convert screen pixel coords to orthographic world coords
-  function screenToWorld(sx, sy){
-    return new THREE.Vector2(
-      sx - window.innerWidth/2,
-      -(sy - window.innerHeight/2)
-    );
-  }
+    /* ===================================================
+       WAVE ANIMATION (WELCOME)
+    =================================================== */
+    (function () {
+      const w1 = document.getElementById('wv1'), w2 = document.getElementById('wv2');
+      let t = 0;
+      function wave(amp, freq, ph, W, H) {
+        let d = `M 0 ${H}`;
+        for (let x = 0; x <= W; x += 5) {
+          const y = H * .5 + Math.sin((x / W * freq * Math.PI * 2) + ph) * amp + Math.sin((x / W * freq * 1.6 * Math.PI * 2) + ph * .7) * (amp * .35);
+          d += ` L ${x} ${y}`;
+        }
+        return d + ` L ${W} ${H} L 0 ${H} Z`;
+      }
+      function tick() {
+        t += .012;
+        w1.setAttribute('d', wave(22, 3, t, 1440, 110));
+        w2.setAttribute('d', wave(14, 2, t + 1.2, 1440, 110));
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
 
-  // Diver screen position (lerped)
-  let diverScreen = {x: window.innerWidth/2, y: window.innerHeight/2};
-  let prevScreen  = {x: window.innerWidth/2, y: window.innerHeight/2};
-  let diverTiltZ  = 0; // tilt toward movement
-  let diverTiltX  = 0; // tilt up/down
-  let lastBubTime = 0;
+    /* ===================================================
+       OCEAN CANVAS ENGINE
+    =================================================== */
+    const cvs = document.getElementById('oc'), ctx = cvs.getContext('2d');
+    let W = 0, H = 0;
+    function resize() { W = cvs.width = window.innerWidth; H = cvs.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
 
-  function animDiverThree(){
-    const dt = clock.getDelta();
-    if(mixer) mixer.update(dt);
+    let scrollDepth = 0;
 
-    // Lerp cursor position
-    diverScreen.x += (mx.x - diverScreen.x) * 0.075;
-    diverScreen.y += (mx.y - diverScreen.y) * 0.075;
+    const DZ = [
+      { d: 0, r: 0, g: 70, b: 155 },
+      { d: .12, r: 0, g: 58, b: 135 },
+      { d: .25, r: 0, g: 42, b: 110 },
+      { d: .40, r: 0, g: 28, b: 85 },
+      { d: .55, r: 0, g: 18, b: 62 },
+      { d: .70, r: 0, g: 10, b: 42 },
+      { d: .85, r: 0, g: 5, b: 26 },
+      { d: 1, r: 0, g: 2, b: 12 },
+    ];
 
-    const ddx = diverScreen.x - prevScreen.x;
-    const ddy = diverScreen.y - prevScreen.y;
-    prevScreen.x = diverScreen.x;
-    prevScreen.y = diverScreen.y;
-
-    if(diverMesh){
-      // Position in orthographic world space
-      const wp = screenToWorld(diverScreen.x, diverScreen.y);
-      diverMesh.position.x = wp.x;
-      diverMesh.position.y = wp.y + Math.sin(clock.elapsedTime * 0.8) * 5; // gentle bob
-
-      // Tilt Z toward horizontal movement direction
-      const targetTiltZ = -ddx * 0.08;
-      const targetTiltX =  ddy * 0.04;
-      diverTiltZ += (targetTiltZ - diverTiltZ) * 0.07;
-      diverTiltX += (targetTiltX - diverTiltX) * 0.07;
-      diverMesh.rotation.z = diverTiltZ;
-      diverMesh.rotation.x = diverTiltX;
-      // Gentle idle sway
-      diverMesh.rotation.y = Math.PI + Math.sin(clock.elapsedTime * 0.3) * 0.06;
+    function getColor(d) {
+      let lo = DZ[0], hi = DZ[DZ.length - 1];
+      for (let i = 0; i < DZ.length - 1; i++) {
+        if (d >= DZ[i].d && d <= DZ[i + 1].d) { lo = DZ[i]; hi = DZ[i + 1]; break; }
+      }
+      const t = (d - lo.d) / (hi.d - lo.d || 1);
+      return { r: Math.round(lo.r + (hi.r - lo.r) * t), g: Math.round(lo.g + (hi.g - lo.g) * t), b: Math.round(lo.b + (hi.b - lo.b) * t) };
     }
 
-    // Spawn DOM bubble trail when moving
-    const spd = Math.hypot(ddx, ddy);
-    const now = Date.now();
-    if(spd > 0.4 && now - lastBubTime > 200){
-      spawnBub(diverScreen.x, diverScreen.y);
-      lastBubTime = now;
+    /* Bubbles */
+    class Bub {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.x = Math.random() * W;
+        this.y = init ? Math.random() * H : H + 20;
+        this.r = Math.random() * 5.5 + 1.2;
+        this.vy = -(Math.random() * .7 + .18);
+        this.vx = (Math.random() - .5) * .28;
+        this.osc = Math.random() * Math.PI * 2;
+        this.os = Math.random() * .045 + .01;
+        this.oa = Math.random() * 1.6 + .3;
+        this.al = Math.random() * .5 + .15;
+      }
+      update() { this.y += this.vy; this.osc += this.os; this.x += Math.sin(this.osc) * this.oa * .28 + this.vx; if (this.y + this.r < 0) this.reset(); }
+      draw(c, col) {
+        const g = c.createRadialGradient(this.x - this.r * .3, this.y - this.r * .3, 0, this.x, this.y, this.r);
+        g.addColorStop(0, `rgba(255,255,255,${this.al * .9})`);
+        g.addColorStop(.55, `rgba(${col.r + 55},${col.g + 75},${col.b + 80},${this.al * .38})`);
+        g.addColorStop(1, `rgba(${col.r},${col.g + 35},${col.b + 55},0)`);
+        c.beginPath(); c.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        c.fillStyle = g; c.fill();
+        c.strokeStyle = `rgba(255,255,255,${this.al * .45})`; c.lineWidth = .5; c.stroke();
+      }
+    }
+    const BUBS = Array.from({ length: 60 }, () => new Bub());
+
+    /* Light rays */
+    class Ray {
+      constructor(i, n) {
+        this.i = i; this.n = n;
+        this.bx = (i / (n - 1)) * W * 1.5 - W * .25;
+        this.angle = (Math.random() - .5) * .22;
+        this.width = Math.random() * 65 + 25;
+        this.al = Math.random() * .075 + .018;
+        this.spd = (Math.random() - .5) * .0005;
+        this.wave = Math.random() * Math.PI * 2;
+      }
+      update() { this.wave += .005; this.angle += this.spd; }
+      draw(c, dep) {
+        if (dep > .78) return;
+        const op = Math.max(0, (1 - dep * 1.28));
+        const sp = Math.sin(this.wave) * 14;
+        const x0 = this.bx + sp, len = H * 1.6;
+        const x1 = x0 + Math.sin(this.angle) * len;
+        const g = c.createLinearGradient(x0, 0, x1, len);
+        g.addColorStop(0, `rgba(120,230,255,${this.al * op * 2.8})`);
+        g.addColorStop(.3, `rgba(60,180,255,${this.al * op})`);
+        g.addColorStop(1, `rgba(0,80,200,0)`);
+        const hw = this.width / 2;
+        c.save(); c.beginPath();
+        c.moveTo(x0 - hw, 0); c.lineTo(x0 + hw, 0);
+        c.lineTo(x1 + hw * .14, len); c.lineTo(x1 - hw * .14, len);
+        c.closePath(); c.fillStyle = g; c.fill(); c.restore();
+      }
+    }
+    const RAYS = Array.from({ length: 9 }, (_, i) => new Ray(i, 9));
+
+    /* Particles */
+    class Part {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.x = Math.random() * W;
+        this.y = init ? Math.random() * H : H + 10;
+        this.sz = Math.random() * 1.8 + .3;
+        this.vy = -(Math.random() * .25 + .05);
+        this.vx = (Math.random() - .5) * .18;
+        this.al = Math.random() * .35 + .05;
+      }
+      update() { this.x += this.vx; this.y += this.vy; if (this.y < 0) this.reset(); }
+      draw(c, col) { c.beginPath(); c.arc(this.x, this.y, this.sz, 0, Math.PI * 2); c.fillStyle = `rgba(${col.r + 75},${col.g + 100},${col.b + 80},${this.al})`; c.fill(); }
+    }
+    const PARTS = Array.from({ length: 85 }, () => new Part());
+
+    /* Caustics */
+    let cT = 0;
+    function caustics(c, col, dep) {
+      if (dep > .62) return;
+      const al = Math.max(0, (.62 - dep) * .09);
+      cT += .005; c.save(); c.globalAlpha = al;
+      for (let i = 0; i < 20; i++) {
+        const cx = (i / 20) * W * 1.5 - W * .25 + Math.sin(cT * .7 + i) * 38;
+        const cy = H * .58 + Math.cos(cT * .5 + i * .75) * 28;
+        const r = 22 + Math.sin(cT + i * .6) * 14;
+        const g = c.createRadialGradient(cx, cy, 0, cx, cy, r);
+        g.addColorStop(0, `rgba(${col.r + 75},${col.g + 100},${col.b + 100},.65)`);
+        g.addColorStop(1, `rgba(0,0,0,0)`);
+        c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.fillStyle = g; c.fill();
+      }
+      c.restore();
     }
 
-    renderer.render(scene, cam);
-    requestAnimationFrame(animDiverThree);
-  }
+    function draw() {
+      const col = getColor(scrollDepth);
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, `rgb(${col.r},${col.g},${col.b})`);
+      bg.addColorStop(.42, `rgb(${Math.max(0, col.r - 2)},${Math.max(0, col.g - 9)},${Math.max(0, col.b - 18)})`);
+      bg.addColorStop(1, `rgb(0,${Math.max(0, col.g >> 2)},${Math.max(0, col.b >> 1)})`);
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
 
-  animDiverThree();
-})();
+      ctx.save(); ctx.globalCompositeOperation = 'screen';
+      RAYS.forEach(r => { r.update(); r.draw(ctx, scrollDepth); });
+      ctx.restore();
 
-function animDiver(){} // kept for compatibility — real diver runs inside initDiver()
+      caustics(ctx, col, scrollDepth);
+      PARTS.forEach(p => { p.update(); p.draw(ctx, col); });
+      BUBS.forEach(b => { b.update(); b.draw(ctx, col); });
 
-/* ===================================================
-   GLASS CARD GLOW TRACKING
-=================================================== */
-document.addEventListener('mousemove',e=>{
-  document.querySelectorAll('.gc').forEach(el=>{
-    const r=el.getBoundingClientRect();
-    el.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
-    el.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
-  });
-});
+      if (scrollDepth < .32) {
+        const a = (1 - scrollDepth / .32) * .17;
+        const sg = ctx.createLinearGradient(0, 0, 0, H * .15);
+        sg.addColorStop(0, `rgba(160,230,255,${a})`); sg.addColorStop(1, `rgba(0,100,200,0)`);
+        ctx.fillStyle = sg; ctx.fillRect(0, 0, W, H * .15);
+      }
 
-/* ===================================================
-   DEPTH METER
-=================================================== */
-const dtext=document.getElementById('dtext'),dfl=document.getElementById('dfl');
-function updateDepth(){
-  const st=window.scrollY,max=document.body.scrollHeight-window.innerHeight;
-  scrollDepth=max>0?Math.min(1,st/max):0;
-  dtext.textContent=Math.round(scrollDepth*3000)+'m';
-  dfl.style.width=(scrollDepth*100)+'%';
-}
-window.addEventListener('scroll',updateDepth,{passive:true});
+      const vg = ctx.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .9);
+      vg.addColorStop(0, 'rgba(0,0,0,0)');
+      vg.addColorStop(1, `rgba(0,0,${Math.max(0, col.b >> 3)},.5)`);
+      ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
 
-/* ===================================================
-   SCROLL REVEAL
-=================================================== */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});
-},{threshold:.1});
-document.querySelectorAll('.reveal,.rst').forEach(el=>obs.observe(el));
+      requestAnimationFrame(draw);
+    }
 
-/* ===================================================
-   DIVE SEQUENCE
-=================================================== */
-let dived=false;
-function startDive(){
-  if(dived)return;dived=true;
-  const ws=document.getElementById('ws'),pf=document.getElementById('pf');
-  document.getElementById('dbtn').style.background='rgba(0,229,255,.25)';
-  setTimeout(()=>ws.classList.add('out'),280);
-  setTimeout(()=>{
-    ws.style.display='none';
-    pf.classList.add('vis');
-    updateDepth();
-    setTimeout(()=>{
-      document.querySelectorAll('.reveal,.rst').forEach(el=>{
-        const r=el.getBoundingClientRect();
-        if(r.top<window.innerHeight)el.classList.add('vis');
+    /* ===================================================
+       THREE.JS DIVER CURSOR — Real GLB model follows cursor
+       Uses vanilla Three.js via CDN importmap
+    =================================================== */
+    let mx = { x: W / 2, y: H / 2 }, dp = { x: W / 2, y: H / 2 }, pp = { x: W / 2, y: H / 2 }, dang = 0, lastBub = 0;
+
+    window.addEventListener('mousemove', e => { mx.x = e.clientX; mx.y = e.clientY; });
+
+    function spawnBub(x, y) {
+      const b = document.createElement('div');
+      b.className = 'dbub';
+      const sz = Math.random() * 6 + 2;
+      b.style.cssText = `left:${x + (Math.random() - .5) * 15}px;top:${y - 18}px;width:${sz}px;height:${sz}px;--dur:${(Math.random() * 1.2 + .9).toFixed(1)}s;`;
+      document.body.appendChild(b);
+      setTimeout(() => b.remove(), 2100);
+    }
+
+    // ---- Three.js diver scene ----
+    (async function initDiver() {
+      const THREE = await import('three');
+      const { GLTFLoader } = await import('https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js');
+
+      const canvas = document.getElementById('diver-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000, 0); // transparent
+      renderer.shadowMap.enabled = true;
+
+      // Orthographic camera: maps NDC [-1,1] to screen pixels
+      const cam = new THREE.OrthographicCamera(
+        -window.innerWidth / 2, window.innerWidth / 2,
+        window.innerHeight / 2, -window.innerHeight / 2,
+        -1000, 1000
+      );
+      cam.position.set(0, 0, 10);
+      cam.lookAt(0, 0, 0);
+
+      const scene = new THREE.Scene();
+
+      // Underwater-tinted lights matching the portfolio aesthetic
+      const ambLight = new THREE.AmbientLight(0x88aacc, 0.5);
+      scene.add(ambLight);
+      const dirLight = new THREE.DirectionalLight(0xbfefff, 1.4);
+      dirLight.position.set(3, 8, 5);
+      dirLight.castShadow = true;
+      scene.add(dirLight);
+      const rimLight = new THREE.PointLight(0x00e5ff, 1.2, 300);
+      rimLight.position.set(-4, 4, 6);
+      scene.add(rimLight);
+
+      // Resize handler
+      window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        cam.left = -window.innerWidth / 2;
+        cam.right = window.innerWidth / 2;
+        cam.top = window.innerHeight / 2;
+        cam.bottom = -window.innerHeight / 2;
+        cam.updateProjectionMatrix();
       });
-    },500);
-  },1480);
-}
 
-window.addEventListener('wheel',()=>{if(!dived)startDive();},{passive:true,once:true});
-window.addEventListener('touchstart',()=>{if(!dived)startDive();},{passive:true,once:true});
-window.addEventListener('keydown',e=>{if(!dived&&['Enter',' ','ArrowDown'].includes(e.key))startDive();});
+      let diverMesh = null;
+      let mixer = null;
+      const clock = new THREE.Clock();
 
-/* Start rendering immediately */
-draw();
-animDiver();
-</script>
+      // Determine scale from model bounding box — target ~110px tall on screen
+      function fitModel(gltf) {
+        const box = new THREE.Box3().setFromObject(gltf.scene);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        // We want the model to appear ~110 screen-pixels tall
+        const targetPx = 110;
+        const modelWorldH = size.y;
+        const scl = targetPx / modelWorldH;
+        gltf.scene.scale.setScalar(scl);
+        // Re-center pivot so model center aligns with cursor
+        gltf.scene.position.sub(center.multiplyScalar(scl));
+        // Rotate to face camera (models usually face +Z or -Z)
+        gltf.scene.rotation.y = Math.PI;
+        return gltf.scene;
+      }
+
+      // Load diver.glb — served from portfolio root
+      const loader = new GLTFLoader();
+      loader.load(
+        'diver.glb',
+        (gltf) => {
+          diverMesh = fitModel(gltf);
+          scene.add(diverMesh);
+          if (gltf.animations && gltf.animations.length) {
+            mixer = new THREE.AnimationMixer(diverMesh);
+            // Play all clips (swimming/idle)
+            gltf.animations.forEach(clip => mixer.clipAction(clip).play());
+          }
+        },
+        undefined,
+        (err) => console.warn('diver.glb load error', err)
+      );
+
+      // Convert screen pixel coords to orthographic world coords
+      function screenToWorld(sx, sy) {
+        return new THREE.Vector2(
+          sx - window.innerWidth / 2,
+          -(sy - window.innerHeight / 2)
+        );
+      }
+
+      // Diver screen position (lerped)
+      let diverScreen = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      let prevScreen = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      let diverTiltZ = 0; // tilt toward movement
+      let diverTiltX = 0; // tilt up/down
+      let lastBubTime = 0;
+
+      function animDiverThree() {
+        const dt = clock.getDelta();
+        if (mixer) mixer.update(dt);
+
+        // Lerp cursor position
+        diverScreen.x += (mx.x - diverScreen.x) * 0.075;
+        diverScreen.y += (mx.y - diverScreen.y) * 0.075;
+
+        const ddx = diverScreen.x - prevScreen.x;
+        const ddy = diverScreen.y - prevScreen.y;
+        prevScreen.x = diverScreen.x;
+        prevScreen.y = diverScreen.y;
+
+        if (diverMesh) {
+          // Position in orthographic world space
+          const wp = screenToWorld(diverScreen.x, diverScreen.y);
+          diverMesh.position.x = wp.x;
+          diverMesh.position.y = wp.y + Math.sin(clock.elapsedTime * 0.8) * 5; // gentle bob
+
+          // Tilt Z toward horizontal movement direction
+          const targetTiltZ = -ddx * 0.08;
+          const targetTiltX = ddy * 0.04;
+          diverTiltZ += (targetTiltZ - diverTiltZ) * 0.07;
+          diverTiltX += (targetTiltX - diverTiltX) * 0.07;
+          diverMesh.rotation.z = diverTiltZ;
+          diverMesh.rotation.x = diverTiltX;
+          // Gentle idle sway
+          diverMesh.rotation.y = Math.PI + Math.sin(clock.elapsedTime * 0.3) * 0.06;
+        }
+
+        // Spawn DOM bubble trail when moving
+        const spd = Math.hypot(ddx, ddy);
+        const now = Date.now();
+        if (spd > 0.4 && now - lastBubTime > 200) {
+          spawnBub(diverScreen.x, diverScreen.y);
+          lastBubTime = now;
+        }
+
+        renderer.render(scene, cam);
+        requestAnimationFrame(animDiverThree);
+      }
+
+      animDiverThree();
+    })();
+
+    function animDiver() { } // kept for compatibility — real diver runs inside initDiver()
+
+    /* ===================================================
+       GLASS CARD GLOW TRACKING
+    =================================================== */
+    document.addEventListener('mousemove', e => {
+      document.querySelectorAll('.gc').forEach(el => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+        el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+      });
+    });
+
+    /* ===================================================
+       DEPTH METER
+    =================================================== */
+    const dtext = document.getElementById('dtext'), dfl = document.getElementById('dfl');
+    function updateDepth() {
+      const st = window.scrollY, max = document.body.scrollHeight - window.innerHeight;
+      scrollDepth = max > 0 ? Math.min(1, st / max) : 0;
+      dtext.textContent = Math.round(scrollDepth * 3000) + 'm';
+      dfl.style.width = (scrollDepth * 100) + '%';
+    }
+    window.addEventListener('scroll', updateDepth, { passive: true });
+
+    /* ===================================================
+       SCROLL REVEAL
+    =================================================== */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+    }, { threshold: .1 });
+    document.querySelectorAll('.reveal,.rst').forEach(el => obs.observe(el));
+
+    /* ===================================================
+       DIVE SEQUENCE
+    =================================================== */
+    let dived = false;
+    function startDive() {
+      if (dived) return; dived = true;
+      const ws = document.getElementById('ws'), pf = document.getElementById('pf');
+      document.getElementById('dbtn').style.background = 'rgba(0,229,255,.25)';
+      setTimeout(() => ws.classList.add('out'), 280);
+      setTimeout(() => {
+        ws.style.display = 'none';
+        pf.classList.add('vis');
+        updateDepth();
+        setTimeout(() => {
+          document.querySelectorAll('.reveal,.rst').forEach(el => {
+            const r = el.getBoundingClientRect();
+            if (r.top < window.innerHeight) el.classList.add('vis');
+          });
+        }, 500);
+      }, 1480);
+    }
+
+    window.addEventListener('wheel', () => { if (!dived) startDive(); }, { passive: true, once: true });
+    window.addEventListener('touchstart', () => { if (!dived) startDive(); }, { passive: true, once: true });
+    window.addEventListener('keydown', e => { if (!dived && ['Enter', ' ', 'ArrowDown'].includes(e.key)) startDive(); });
+
+    /* Start rendering immediately */
+    draw();
+    animDiver();
+  </script>
 </body>
+
 </html>
