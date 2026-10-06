@@ -1835,10 +1835,10 @@
         return gltf.scene;
       }
 
-      // Load diver.glb — served from portfolio root
+      // Load diver copy.glb — served from portfolio root
       const loader = new GLTFLoader();
       loader.load(
-        'diver.glb',
+        'diver copy.glb',
         (gltf) => {
           diverMesh = fitModel(gltf);
           scene.add(diverMesh);
@@ -1849,7 +1849,7 @@
           }
         },
         undefined,
-        (err) => console.warn('diver.glb load error', err)
+        (err) => console.warn('diver_copy.glb load error', err)
       );
 
       // Convert screen pixel coords to orthographic world coords
@@ -1863,9 +1863,18 @@
       // Diver screen position (lerped)
       let diverScreen = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
       let prevScreen = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-      let diverTiltZ = 0; // tilt toward movement
-      let diverTiltX = 0; // tilt up/down
+      let diverTiltX = 0; // pitch up/down
+      let diverYaw   = 0; // yaw left/right (rotation.y offset)
       let lastBubTime = 0;
+
+      // Scroll-direction pitch
+      let lastScrollY = window.scrollY;
+      let scrollVel = 0;       // raw scroll delta per frame
+      let scrollPitch = 0;     // smoothed pitch from scroll
+      window.addEventListener('scroll', () => {
+        scrollVel = window.scrollY - lastScrollY;
+        lastScrollY = window.scrollY;
+      }, { passive: true });
 
       function animDiverThree() {
         const dt = clock.getDelta();
@@ -1886,15 +1895,27 @@
           diverMesh.position.x = wp.x;
           diverMesh.position.y = wp.y + Math.sin(clock.elapsedTime * 0.8) * 5; // gentle bob
 
-          // Tilt Z toward horizontal movement direction
-          const targetTiltZ = -ddx * 0.08;
-          const targetTiltX = ddy * 0.04;
-          diverTiltZ += (targetTiltZ - diverTiltZ) * 0.07;
-          diverTiltX += (targetTiltX - diverTiltX) * 0.07;
-          diverMesh.rotation.z = diverTiltZ;
+          // Full 3D facing — orient toward actual cursor movement direction
+          const speed = Math.hypot(ddx, ddy);
+          // Normalise movement vector; fade out when nearly still
+          const fade = Math.min(speed * 0.2, 1.0);
+          const nx = speed > 0.05 ? ddx / speed : 0; // -1 (left) … +1 (right)
+          const ny = speed > 0.05 ? ddy / speed : 0; // -1 (up)   … +1 (down)
+
+          // Yaw (Y): cursor right → turn right, cursor left → turn left
+          const targetYaw = nx * fade * (Math.PI / 2);
+          diverYaw += (targetYaw - diverYaw) * 0.10;
+          diverMesh.rotation.y = Math.PI - diverYaw + Math.sin(clock.elapsedTime * 0.3) * 0.02;
+
+          // Pitch (X): cursor down → nose down (-x), cursor up → nose up (+x)
+          //            blended with scroll pitch
+          const targetScrollPitch = THREE.MathUtils.clamp(-scrollVel * 0.3, -Math.PI / 2, Math.PI / 2);
+          scrollPitch += (targetScrollPitch - scrollPitch) * 0.12;
+          scrollVel *= 0.92;
+          const targetTiltX = -ny * fade * (Math.PI / 2) + scrollPitch;
+          diverTiltX += (targetTiltX - diverTiltX) * 0.10;
           diverMesh.rotation.x = diverTiltX;
-          // Gentle idle sway
-          diverMesh.rotation.y = Math.PI + Math.sin(clock.elapsedTime * 0.3) * 0.06;
+          diverMesh.rotation.z = 0;
         }
 
         // Spawn DOM bubble trail when moving

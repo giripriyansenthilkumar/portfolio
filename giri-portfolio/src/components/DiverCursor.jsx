@@ -5,18 +5,18 @@ import * as THREE from 'three';
 
 /* ── Shared mouse state (module-level, no re-renders) ── */
 const MS = {
-  x:  typeof window !== 'undefined' ? window.innerWidth  / 2 : 400,
-  y:  typeof window !== 'undefined' ? window.innerHeight / 2 : 300,
+  x: typeof window !== 'undefined' ? window.innerWidth / 2 : 400,
+  y: typeof window !== 'undefined' ? window.innerHeight / 2 : 300,
   vx: 0,
   vy: 0,
 };
 
 /* ── Spawn DOM bubble particle ── */
 function spawnBubble(x, y) {
-  const b  = document.createElement('div');
+  const b = document.createElement('div');
   b.className = 'bubble-particle';
   const sz = Math.random() * 6 + 2;
-  b.style.cssText = `left:${x + (Math.random()-0.5)*18}px;top:${y-14}px;width:${sz}px;height:${sz}px;--dur:${(Math.random()*1.2+0.9).toFixed(1)}s;`;
+  b.style.cssText = `left:${x + (Math.random() - 0.5) * 18}px;top:${y - 14}px;width:${sz}px;height:${sz}px;--dur:${(Math.random() * 1.2 + 0.9).toFixed(1)}s;`;
   document.body.appendChild(b);
   setTimeout(() => b.remove(), 2300);
 }
@@ -25,19 +25,19 @@ function spawnBubble(x, y) {
    3-D diver model rendered inside R3F Canvas
 ══════════════════════════════════════════════════════ */
 function Diver3D() {
-  const groupRef   = useRef();
-  const { scene, animations } = useGLTF('/diver.glb');
+  const groupRef = useRef();
+  const { scene, animations } = useGLTF('/diver_copy.glb');
   const { actions } = useAnimations(animations, groupRef);
-  const { size }   = useThree();
+  const { size } = useThree();
 
   // Smooth lerp refs (no state = no re-renders)
-  const smoothX   = useRef(0);
-  const smoothY   = useRef(0);
-  const yaw       = useRef(Math.PI);
-  const pitch     = useRef(0);
-  const roll      = useRef(0);
-  const lastBub   = useRef(0);
-  const fitted    = useRef(false);
+  const smoothX = useRef(0);
+  const smoothY = useRef(0);
+  const yaw = useRef(Math.PI);
+  const pitch = useRef(0);
+  const roll = useRef(0);
+  const lastBub = useRef(0);
+  const fitted = useRef(false);
 
   /* ── Scale & orient the GLB once ── */
   useEffect(() => {
@@ -45,7 +45,7 @@ function Diver3D() {
     fitted.current = true;
 
     const box = new THREE.Box3().setFromObject(scene);
-    const sz  = box.getSize(new THREE.Vector3());
+    const sz = box.getSize(new THREE.Vector3());
     const ctr = box.getCenter(new THREE.Vector3());
 
     // Target ≈ 140 screen-pixels tall (ortho cam: 1 world unit = 1 px)
@@ -83,7 +83,7 @@ function Diver3D() {
 
     /* Screen → ortho world coords
        In R3F ortho (zoom=1): world(0,0) = screen centre          */
-    const wx = MS.x - size.width  / 2;
+    const wx = MS.x - size.width / 2;
     const wy = size.height / 2 - MS.y;   // flip Y
 
     /* Tight follow — high lerp keeps diver close to cursor */
@@ -95,19 +95,19 @@ function Diver3D() {
     /* Body rotation toward movement direction */
     if (spd > 0.5) {
       // Yaw  – turn toward horizontal movement
-      const targetYaw   = Math.PI - MS.vx * 0.048;
-      yaw.current      += (targetYaw - yaw.current)   * 0.07;
+      const targetYaw = Math.PI - MS.vx * 0.048;
+      yaw.current += (targetYaw - yaw.current) * 0.07;
       // Pitch – nose-down / nose-up
       const targetPitch = MS.vy * 0.035;
-      pitch.current    += (targetPitch - pitch.current) * 0.07;
+      pitch.current += (targetPitch - pitch.current) * 0.07;
       // Roll  – bank into turns
-      const targetRoll  = -MS.vx * 0.022;
-      roll.current     += (targetRoll - roll.current)  * 0.07;
+      const targetRoll = -MS.vx * 0.022;
+      roll.current += (targetRoll - roll.current) * 0.07;
     } else {
       // Return to neutral pose
-      yaw.current   += (Math.PI - yaw.current)   * 0.03;
-      pitch.current += (0 - pitch.current)        * 0.03;
-      roll.current  += (0 - roll.current)         * 0.03;
+      yaw.current += (Math.PI - yaw.current) * 0.03;
+      pitch.current += (0 - pitch.current) * 0.03;
+      roll.current += (0 - roll.current) * 0.03;
     }
 
     /* Apply transforms — position locked exactly to cursor */
@@ -146,8 +146,8 @@ export default function DiverCursor({ isWelcome }) {
     const onMove = (e) => {
       MS.vx = e.clientX - MS.x;
       MS.vy = e.clientY - MS.y;
-      MS.x  = e.clientX;
-      MS.y  = e.clientY;
+      MS.x = e.clientX;
+      MS.y = e.clientY;
     };
     window.addEventListener('mousemove', onMove);
     return () => window.removeEventListener('mousemove', onMove);
@@ -158,12 +158,12 @@ export default function DiverCursor({ isWelcome }) {
   return (
     <Canvas
       style={{
-        position : 'fixed',
-        inset    : 0,
-        zIndex   : 8000,
-        pointerEvents : 'none',
-        width    : '100vw',
-        height   : '100vh',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 8000,
+        pointerEvents: 'none',
+        width: '100vw',
+        height: '100vh',
       }}
       orthographic
       camera={{ zoom: 1, near: -2000, far: 2000, position: [0, 0, 100] }}
@@ -171,11 +171,11 @@ export default function DiverCursor({ isWelcome }) {
       dpr={[1, 2]}
     >
       {/* Underwater-tinted lighting for the 3-D model */}
-      <ambientLight      intensity={0.55}  color="#88aacc" />
-      <directionalLight  position={[4,10,6]}  intensity={1.9} color="#cceeff" />
-      <pointLight        position={[-5,5,8]}   intensity={1.7} color="#00e5ff" distance={500} />
-      <pointLight        position={[5,-3,5]}   intensity={0.5} color="#0044bb" distance={400} />
-      <hemisphereLight   args={["#002244","#001133", 0.4]} />
+      <ambientLight intensity={0.55} color="#88aacc" />
+      <directionalLight position={[4, 10, 6]} intensity={1.9} color="#cceeff" />
+      <pointLight position={[-5, 5, 8]} intensity={1.7} color="#00e5ff" distance={500} />
+      <pointLight position={[5, -3, 5]} intensity={0.5} color="#0044bb" distance={400} />
+      <hemisphereLight args={["#002244", "#001133", 0.4]} />
 
       {/* Suspense: shows nothing while GLB loads, then model appears */}
       <Suspense fallback={null}>
