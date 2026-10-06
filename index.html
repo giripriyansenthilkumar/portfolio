@@ -1927,8 +1927,278 @@
         }
 
         renderer.render(scene, cam);
+        // Update fish flock every frame
+        if (window._updateFish) window._updateFish(dt, clock.elapsedTime);
         requestAnimationFrame(animDiverThree);
       }
+
+      /* ===================================================
+         FISH FLOCK SYSTEM
+         • Procedural 3D fish built from Three.js geometry
+         • Boids flocking: separation, alignment, cohesion
+         • Scatter in fear when diver cursor approaches
+         • "Constellation Ritual": after 6s idle the fish
+           slowly drift into a glowing star formation, then
+           break apart the moment the cursor moves again
+      =================================================== */
+      (function initFish() {
+        const NUM_FISH = 14;
+        const W = window.innerWidth, H = window.innerHeight;
+        const HALF_W = W / 2, HALF_H = H / 2;
+
+        // ── Palette ──────────────────────────────────────────
+        const PALETTES = [
+          { body: 0xff6b35, fin: 0xffa500, eye: 0xffffff }, // clownfish orange
+          { body: 0x00d4aa, fin: 0x00ffcc, eye: 0xffffff }, // tropical teal
+          { body: 0xf7c59f, fin: 0xffb347, eye: 0xffffff }, // pale gold
+          { body: 0xc77dff, fin: 0xe0aaff, eye: 0xffffff }, // deep purple
+          { body: 0x06d6a0, fin: 0x80ffdb, eye: 0xffffff }, // emerald
+          { body: 0xef233c, fin: 0xff6b6b, eye: 0xffffff }, // crimson
+          { body: 0x4cc9f0, fin: 0x90e0ef, eye: 0xffffff }, // ice blue
+        ];
+
+        // ── Build procedural fish mesh ────────────────────────
+        function makeFish(pal) {
+          const group = new THREE.Group();
+
+          // Body — scaled sphere
+          const bodyGeo = new THREE.SphereGeometry(7, 10, 7);
+          bodyGeo.scale(1, 0.55, 0.48);
+          const bodyMat = new THREE.MeshPhongMaterial({
+            color: pal.body, shininess: 80, emissive: pal.body, emissiveIntensity: 0.08
+          });
+          group.add(new THREE.Mesh(bodyGeo, bodyMat));
+
+          // Tail — two flat triangular prisms
+          const tailGeo = new THREE.ConeGeometry(5, 9, 4, 1);
+          tailGeo.rotateZ(Math.PI / 2);
+          tailGeo.translate(-11, 0, 0);
+          const tailMat = new THREE.MeshPhongMaterial({ color: pal.fin, shininess: 60 });
+          group.add(new THREE.Mesh(tailGeo, tailMat));
+
+          // Top fin
+          const finGeo = new THREE.ConeGeometry(2.5, 7, 3, 1);
+          finGeo.rotateZ(-Math.PI / 6);
+          finGeo.translate(0, 6, 0);
+          group.add(new THREE.Mesh(finGeo, tailMat));
+
+          // Pectoral fins (left & right)
+          [-1, 1].forEach(side => {
+            const pGeo = new THREE.ConeGeometry(1.8, 5, 3, 1);
+            pGeo.rotateZ(Math.PI / 2 * side);
+            pGeo.translate(0, 0, 5 * side);
+            group.add(new THREE.Mesh(pGeo, tailMat));
+          });
+
+          // Eye
+          const eyeGeo = new THREE.SphereGeometry(1.4, 6, 6);
+          eyeGeo.translate(5.5, 1.5, 3.2);
+          const eyeMat = new THREE.MeshPhongMaterial({ color: 0x111111, shininess: 120 });
+          group.add(new THREE.Mesh(eyeGeo, eyeMat));
+
+          // Pupil glint
+          const pupilGeo = new THREE.SphereGeometry(0.6, 4, 4);
+          pupilGeo.translate(6, 1.8, 3.8);
+          group.add(new THREE.Mesh(pupilGeo, new THREE.MeshBasicMaterial({ color: 0xffffff })));
+
+          return group;
+        }
+
+        // ── Star formation points (constellation) ────────────
+        function starPoints(n, r1 = 160, r2 = 80) {
+          const pts = [];
+          for (let i = 0; i < n; i++) {
+            const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+            const r = i % 2 === 0 ? r1 : r2;
+            pts.push(new THREE.Vector3(Math.cos(angle) * r, Math.sin(angle) * r, 0));
+          }
+          return pts;
+        }
+        const STAR_PTS = starPoints(NUM_FISH);
+
+        // ── Fish state ────────────────────────────────────────
+        const fish = [];
+        for (let i = 0; i < NUM_FISH; i++) {
+          const pal = PALETTES[i % PALETTES.length];
+          const mesh = makeFish(pal);
+          scene.add(mesh);
+
+          const angle = Math.random() * Math.PI * 2;
+          const spd   = 0.6 + Math.random() * 0.5;
+          fish.push({
+            mesh,
+            pos:  new THREE.Vector3((Math.random() - 0.5) * W * 0.8, (Math.random() - 0.5) * H * 0.8, -5),
+            vel:  new THREE.Vector3(Math.cos(angle) * spd, Math.sin(angle) * spd, 0),
+            tailPhase: Math.random() * Math.PI * 2,
+            scaleBase: 0.85 + Math.random() * 0.3,
+            scared: false,
+            constellating: false,    // moving toward star point
+            starTarget: STAR_PTS[i].clone(),
+          });
+        }
+
+        // ── Boids parameters ──────────────────────────────────
+        const SIGHT       = 80;   // neighbour radius
+        const FEAR_RADIUS = 130;  // diver cursor scare radius
+        const MAX_SPD     = 2.8;
+        const MIN_SPD     = 0.5;
+        const SEP_W       = 1.6;
+        const ALI_W       = 0.9;
+        const COH_W       = 0.7;
+        const EDGE_MARGIN = 60;
+        const EDGE_W      = 2.2;
+
+        // ── Idle / constellation state ────────────────────────
+        let idleTimer = null;
+        let constellation = false;
+        let glowMeshes = []; // star glow halos shown during constellation
+
+        function enterConstellation() {
+          constellation = true;
+          fish.forEach((f, i) => {
+            f.constellating = true;
+            f.starTarget = STAR_PTS[i].clone();
+          });
+          // Add glowing halos
+          fish.forEach(f => {
+            const halo = new THREE.Mesh(
+              new THREE.SphereGeometry(14, 12, 12),
+              new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.18 })
+            );
+            scene.add(halo);
+            glowMeshes.push(halo);
+          });
+        }
+
+        function exitConstellation() {
+          constellation = false;
+          fish.forEach(f => { f.constellating = false; });
+          glowMeshes.forEach(h => scene.remove(h));
+          glowMeshes = [];
+        }
+
+        function resetIdleTimer() {
+          if (constellation) exitConstellation();
+          clearTimeout(idleTimer);
+          idleTimer = setTimeout(enterConstellation, 6000);
+        }
+        resetIdleTimer(); // start timer immediately
+
+        // Mouse movement resets the idle timer
+        document.addEventListener('mousemove', resetIdleTimer, { passive: true });
+
+        // ── Per-frame update ──────────────────────────────────
+        function updateFish(dt, elapsed) {
+          // Diver cursor in world space
+          const diverWX = mx.x - window.innerWidth  / 2;
+          const diverWY = -(mx.y - window.innerHeight / 2);
+
+          fish.forEach((f, fi) => {
+            const pos = f.pos, vel = f.vel;
+
+            if (f.constellating && constellation) {
+              // ── Constellation mode: drift to star target ──
+              const toTarget = f.starTarget.clone().sub(pos);
+              const dist = toTarget.length();
+              if (dist > 3) {
+                toTarget.normalize().multiplyScalar(Math.min(dist * 0.04, 1.5));
+                vel.lerp(toTarget, 0.08);
+              } else {
+                vel.multiplyScalar(0.85); // settle
+              }
+
+              // Update glow halo position
+              if (glowMeshes[fi]) {
+                glowMeshes[fi].position.copy(pos);
+                glowMeshes[fi].material.opacity = 0.12 + Math.sin(elapsed * 1.5 + fi) * 0.06;
+              }
+
+            } else {
+              // ── Normal boids ──────────────────────────────
+              let sep = new THREE.Vector3();
+              let ali = new THREE.Vector3();
+              let coh = new THREE.Vector3();
+              let count = 0;
+
+              fish.forEach((other, oi) => {
+                if (oi === fi) return;
+                const diff = pos.clone().sub(other.pos);
+                const d = diff.length();
+                if (d < SIGHT) {
+                  // Separation
+                  diff.normalize().divideScalar(Math.max(d, 1));
+                  sep.add(diff);
+                  // Alignment
+                  ali.add(other.vel);
+                  // Cohesion
+                  coh.add(other.pos);
+                  count++;
+                }
+              });
+
+              if (count > 0) {
+                sep.multiplyScalar(SEP_W);
+                ali.divideScalar(count).normalize().multiplyScalar(ALI_W);
+                coh.divideScalar(count).sub(pos).normalize().multiplyScalar(COH_W);
+                vel.add(sep).add(ali).add(coh);
+              }
+
+              // ── Fear: scatter from diver cursor ──────────
+              const todiverX = pos.x - diverWX;
+              const todiverY = pos.y - diverWY;
+              const diverDist = Math.hypot(todiverX, todiverY);
+              if (diverDist < FEAR_RADIUS) {
+                const flee = new THREE.Vector3(todiverX, todiverY, 0)
+                  .normalize()
+                  .multiplyScalar((FEAR_RADIUS - diverDist) / FEAR_RADIUS * 4.5);
+                vel.add(flee);
+                f.scared = true;
+              } else {
+                f.scared = false;
+              }
+
+              // ── Soft boundary wrap ────────────────────────
+              if (pos.x < -HALF_W + EDGE_MARGIN) vel.x += EDGE_W;
+              if (pos.x >  HALF_W - EDGE_MARGIN) vel.x -= EDGE_W;
+              if (pos.y < -HALF_H + EDGE_MARGIN) vel.y += EDGE_W;
+              if (pos.y >  HALF_H - EDGE_MARGIN) vel.y -= EDGE_W;
+            }
+
+            // ── Clamp speed ───────────────────────────────────
+            const spd = vel.length();
+            if (spd > MAX_SPD) vel.multiplyScalar(MAX_SPD / spd);
+            if (spd < MIN_SPD && !f.constellating) vel.multiplyScalar(MIN_SPD / Math.max(spd, 0.001));
+
+            // ── Integrate position ────────────────────────────
+            pos.addScaledVector(vel, dt * 60);
+
+            // ── Orient mesh to face velocity direction ────────
+            if (vel.lengthSq() > 0.01) {
+              const angle = Math.atan2(vel.y, vel.x);
+              f.mesh.rotation.y = -angle + Math.PI; // face forward
+            }
+
+            // ── Tail wag (rotate tail cone via group child) ──
+            f.tailPhase += dt * (f.scared ? 8 : 4);
+            const wagAmt = f.scared ? 0.45 : 0.22;
+            f.mesh.rotation.z = Math.sin(f.tailPhase) * wagAmt;
+
+            // ── Gentle body roll ──────────────────────────────
+            f.mesh.rotation.x = Math.sin(f.tailPhase * 0.5) * 0.12;
+
+            // ── Apply position ────────────────────────────────
+            f.mesh.position.copy(pos);
+            f.mesh.position.z = -5 + Math.sin(elapsed * 0.4 + fi) * 2;
+
+            // ── Scale pulse when scared ───────────────────────
+            const scl = f.scaleBase * (f.scared ? 1 + Math.sin(elapsed * 12) * 0.04 : 1);
+            f.mesh.scale.setScalar(scl);
+          });
+        }
+
+        // Expose updater to be called from the render loop
+        window._updateFish = updateFish;
+      })();
 
       animDiverThree();
     })();
