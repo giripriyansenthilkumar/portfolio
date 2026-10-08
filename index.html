@@ -1,23 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<<<<<<< HEAD
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Giripriyan S — AI/ML Developer | Underwater Portfolio</title>
-    <meta name="description" content="Giripriyan S — Aspiring AI and ML developer specializing in Computer Vision, NLP, and intelligent systems. Interactive underwater portfolio." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/portfolio/assets/index-C8oM4g1i.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-CdAOH9n8.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
-=======
 
 <head>
   <meta charset="UTF-8" />
@@ -56,7 +38,7 @@
       font-family: 'Space Grotesk', sans-serif;
       color: #e0f7ff;
       overflow-x: hidden;
-      background: #000820;
+      background: #084880;
     }
 
     :root {
@@ -68,24 +50,97 @@
       --text: rgba(224, 247, 255, 0.8);
     }
 
-    /* === WELCOME === */
+    /* === WELCOME SCREEN (boat + dive) === */
     #ws {
       position: fixed;
       inset: 0;
       z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      background: radial-gradient(ellipse at center, #001a3a 0%, #000510 70%);
       overflow: hidden;
-      transition: opacity 1.2s ease, transform 1.2s ease;
+      transition: opacity 1.4s ease;
+      background: #084880;
     }
 
     #ws.out {
       opacity: 0;
-      transform: translateY(-24px);
       pointer-events: none;
+    }
+
+    /* Sky + sea intro canvas fills the screen */
+    #intro-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Hint overlay */
+    #dive-hint {
+      position: absolute;
+      bottom: 52px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    #dive-hint.show { opacity: 1; }
+    .hint-label {
+      font-family: 'Exo 2', sans-serif;
+      font-size: .78rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: rgba(0,229,255,.8);
+      animation: bob 1.8s ease-in-out infinite;
+    }
+    .hint-arrow {
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(180deg, transparent, rgba(0,229,255,.7));
+      margin: 10px auto 0;
+      animation: spulse 1.8s ease-in-out infinite;
+    }
+
+    /* Name card that fades in while boat arrives */
+    #intro-name {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -68%);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    #intro-name.show { opacity: 1; }
+    #intro-name .wg {
+      font-family: 'Exo 2', sans-serif;
+      font-size: clamp(.7rem, 1.5vw, .9rem);
+      letter-spacing: .45em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    #intro-name .wn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg,#7df4ff 0%,#00e5ff 45%,#0099ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 28px rgba(0,229,255,.45));
+      margin-bottom: 8px;
+    }
+    #intro-name .wt {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(.85rem, 2vw, 1.2rem);
+      font-weight: 300;
+      color: rgba(224,247,255,.72);
+      letter-spacing: .12em;
     }
 
     .wstars {
@@ -111,103 +166,7 @@
       background: linear-gradient(180deg, transparent, rgba(0, 80, 200, 0.3));
     }
 
-    .wc {
-      text-align: center;
-      z-index: 10;
-      padding: 40px;
-    }
-
-    .wg {
-      font-family: 'Exo 2', sans-serif;
-      font-size: clamp(0.8rem, 2vw, 1rem);
-      letter-spacing: .45em;
-      text-transform: uppercase;
-      color: var(--teal);
-      opacity: 0;
-      animation: fiu .8s .3s forwards;
-      margin-bottom: 14px;
-    }
-
-    .wn {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(2.8rem, 7vw, 5.5rem);
-      font-weight: 900;
-      background: linear-gradient(135deg, #7df4ff 0%, #00e5ff 45%, #0099ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      opacity: 0;
-      animation: fiu .9s .6s forwards;
-      filter: drop-shadow(0 0 30px rgba(0, 229, 255, .5));
-    }
-
-    .wt {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(.9rem, 2.5vw, 1.3rem);
-      font-weight: 300;
-      color: rgba(224, 247, 255, .75);
-      letter-spacing: .15em;
-      opacity: 0;
-      animation: fiu .9s 1s forwards;
-      margin-top: 10px;
-    }
-
-    .wtag {
-      font-family: 'Exo 2', sans-serif;
-      font-size: clamp(.7rem, 1.5vw, .9rem);
-      color: var(--teal);
-      opacity: 0;
-      animation: fiu .8s 1.4s forwards;
-      margin-top: 6px;
-      font-style: italic;
-    }
-
-    .wbtn-wrap {
-      margin-top: 40px;
-      opacity: 0;
-      animation: fiu .8s 1.8s forwards;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .dbtn {
-      padding: 14px 42px;
-      border: 1.5px solid var(--teal);
-      background: rgba(0, 229, 255, .08);
-      color: var(--teal);
-      font-family: 'Exo 2', sans-serif;
-      font-size: .88rem;
-      letter-spacing: .3em;
-      text-transform: uppercase;
-      border-radius: 50px;
-      transition: all .3s;
-      animation: pborder 2s infinite;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .dbtn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(0, 229, 255, .2), transparent 70%);
-      opacity: 0;
-      transition: opacity .3s;
-    }
-
-    .dbtn:hover::before {
-      opacity: 1;
-    }
-
-    .dhint {
-      font-family: 'Exo 2', sans-serif;
-      font-size: .72rem;
-      color: rgba(0, 229, 255, .5);
-      letter-spacing: .2em;
-      animation: bob 1.5s infinite;
-    }
+    .wc { display: none; } /* kept for compat, not used */
 
     /* === OCEAN CANVAS === */
     #oc {
@@ -1226,24 +1185,20 @@
 
 <body>
 
-  <!-- WELCOME SCREEN -->
+  <!-- WELCOME SCREEN (boat intro + dive) -->
   <div id="ws">
-    <div class="wstars" id="wst"></div>
-    <svg style="position:absolute;bottom:0;left:-50%;width:200%;height:110px" viewBox="0 0 1440 110"
-      preserveAspectRatio="none">
-      <path id="wv1" fill="rgba(0,100,210,.22)" d="" />
-      <path id="wv2" fill="rgba(0,60,180,.15)" d="" />
-    </svg>
-    <div class="wsurface"></div>
-    <div class="wc">
+    <!-- Full-screen canvas: sky, sea surface, boat, diver jump -->
+    <canvas id="intro-canvas"></canvas>
+    <!-- Name card -->
+    <div id="intro-name">
       <p class="wg">Welcome to the deep</p>
       <h1 class="wn">Giripriyan S</h1>
       <p class="wt">AI &amp; Machine Learning Developer</p>
-      <p class="wtag">Coimbatore, India &nbsp;&middot;&nbsp; B.Tech AIML &nbsp;&middot;&nbsp; Intel&reg; Unnati 2025</p>
-      <div class="wbtn-wrap">
-        <button class="dbtn" id="dbtn" onclick="startDive()">&#x21E9;&nbsp; DIVE IN &nbsp;&#x21E9;</button>
-        <span class="dhint">scroll or click to dive</span>
-      </div>
+    </div>
+    <!-- Hint -->
+    <div id="dive-hint">
+      <span class="hint-label">Press any key &nbsp;&middot;&nbsp; Scroll &nbsp;&middot;&nbsp; Click to dive</span>
+      <span class="hint-arrow"></span>
     </div>
   </div>
 
@@ -1648,40 +1603,1241 @@
 
   <script>
     /* ===================================================
-       STARS
+       BOAT + DIVER INTRO ANIMATION  –  Realistic 3D Yacht & Diver
     =================================================== */
-    (function () {
-      const c = document.getElementById('wst');
-      for (let i = 0; i < 160; i++) {
-        const s = document.createElement('div');
-        s.className = 'wstar';
-        s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 78}%;width:${(Math.random() * 2 + .8).toFixed(1)}px;height:${(Math.random() * 2 + .8).toFixed(1)}px;--d:${(Math.random() * 4 + 1).toFixed(1)}s;--o:${(Math.random() * .7 + .2).toFixed(2)};animation-delay:${(Math.random() * 5).toFixed(1)}s;`;
-        c.appendChild(s);
+    (async function initIntro3D() {
+      const canvas = document.getElementById('intro-canvas');
+      if (!canvas) return;
+
+      // Import Three.js and GLTFLoader
+      const THREE = await import('three');
+      const { GLTFLoader } = await import('https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js');
+
+      // ── Renderer ──────────────────────────────────────
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance'
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.18;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      // ── Scene & Camera ────────────────────────────────
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x72bdec);
+      scene.fog = new THREE.FogExp2(0x8ac7f0, 0.007);
+
+      const camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.5, 900);
+      camera.position.set(0, 5.2, 31);
+      camera.lookAt(0, 1.1, 0);
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // ── Atmosphere & Bright Noon Lighting ──────────────
+      // Rich sky-blue ambient daylight
+      const ambientLight = new THREE.AmbientLight(0x8ec4f5, 1.35);
+      scene.add(ambientLight);
+
+      // High noon sun position (bright daylight overhead)
+      const SUN_POS = new THREE.Vector3(14, 34, -28);
+
+      // Bright warm-white sunlight directional light
+      const sunLight = new THREE.DirectionalLight(0xfffaee, 3.4);
+      sunLight.position.copy(SUN_POS);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.width = 1024;
+      sunLight.shadow.mapSize.height = 1024;
+      sunLight.shadow.bias = -0.001;
+      scene.add(sunLight);
+
+      // Vibrant turquoise ocean reflection fill light
+      const oceanFillLight = new THREE.DirectionalLight(0x0092c8, 1.05);
+      oceanFillLight.position.set(-14, 6, 10);
+      scene.add(oceanFillLight);
+
+      // ── Noon Daytime Sky Dome & Cumulus Clouds ─────────
+      function createNoonSkyTexture() {
+        const sc = document.createElement('canvas');
+        sc.width = 1024;
+        sc.height = 1024;
+        const sctx = sc.getContext('2d');
+
+        // Crisp midday azure sky gradient
+        const grad = sctx.createLinearGradient(0, 0, 0, 1024);
+        grad.addColorStop(0.00, '#004fa8'); // Zenith deep azure
+        grad.addColorStop(0.24, '#1272c4'); // Clear cerulean
+        grad.addColorStop(0.48, '#369adc'); // Midday blue
+        grad.addColorStop(0.70, '#66b4ec'); // Sunny sky blue
+        grad.addColorStop(0.86, '#98d2f6'); // Horizon cyan-blue
+        grad.addColorStop(0.96, '#c4e8fd'); // Coastal pale haze
+        grad.addColorStop(1.00, '#ddf2fe'); // Horizon water haze
+        sctx.fillStyle = grad;
+        sctx.fillRect(0, 0, 1024, 1024);
+
+        // Fluffy white fair-weather cumulus clouds
+        const cloudBands = [
+          { y: 380, h: 55, count: 6, alpha: 0.80 },
+          { y: 480, h: 48, count: 8, alpha: 0.85 },
+          { y: 580, h: 42, count: 9, alpha: 0.82 },
+          { y: 680, h: 35, count: 11, alpha: 0.75 }
+        ];
+
+        cloudBands.forEach(band => {
+          for (let i = 0; i < band.count; i++) {
+            const cx = (i / band.count) * 1024 + (Math.random() - 0.5) * 80;
+            const cy = band.y + (Math.random() - 0.5) * 20;
+            const rx = Math.random() * 85 + 70;
+            const ry = band.h * (0.7 + Math.random() * 0.6);
+
+            // Cloud soft shadow underside
+            const cgradDark = sctx.createRadialGradient(cx, cy + 6, 4, cx, cy + 6, rx);
+            cgradDark.addColorStop(0, 'rgba(195, 218, 238, 0.45)');
+            cgradDark.addColorStop(0.65, 'rgba(215, 232, 248, 0.20)');
+            cgradDark.addColorStop(1, 'rgba(230, 242, 255, 0)');
+            sctx.save();
+            sctx.scale(1, ry / rx);
+            sctx.beginPath();
+            sctx.arc(cx, (cy + 6) * (rx / ry), rx, 0, Math.PI * 2);
+            sctx.fillStyle = cgradDark;
+            sctx.fill();
+            sctx.restore();
+
+            // Cloud bright sunlit white top
+            const cgrad = sctx.createRadialGradient(cx - 6, cy - 4, 3, cx, cy, rx);
+            cgrad.addColorStop(0, `rgba(255, 255, 255, ${band.alpha})`);
+            cgrad.addColorStop(0.7, `rgba(250, 253, 255, ${band.alpha * 0.6})`);
+            cgrad.addColorStop(1, 'rgba(240, 250, 255, 0)');
+            sctx.save();
+            sctx.scale(1, ry / rx);
+            sctx.beginPath();
+            sctx.arc(cx, cy * (rx / ry), rx, 0, Math.PI * 2);
+            sctx.fillStyle = cgrad;
+            sctx.fill();
+            sctx.restore();
+          }
+        });
+
+        return sc;
       }
+
+      const skyTex = new THREE.CanvasTexture(createNoonSkyTexture());
+      const skyDome = new THREE.Mesh(
+        new THREE.SphereGeometry(250, 32, 24),
+        new THREE.MeshBasicMaterial({
+          map: skyTex,
+          side: THREE.BackSide,
+          depthWrite: false
+        })
+      );
+      scene.add(skyDome);
+
+      // ── High Noon Sun ──────────────────────────────────
+      function createNoonSunTexture() {
+        const sc = document.createElement('canvas');
+        sc.width = 512;
+        sc.height = 512;
+        const sctx = sc.getContext('2d');
+
+        // Brilliant daytime sun disc with radiant glow
+        const sunGrad = sctx.createRadialGradient(256, 256, 16, 256, 256, 250);
+        sunGrad.addColorStop(0.00, '#ffffff');
+        sunGrad.addColorStop(0.30, '#ffffff');
+        sunGrad.addColorStop(0.60, '#fffbe6');
+        sunGrad.addColorStop(0.85, '#fff4b8');
+        sunGrad.addColorStop(1.00, 'rgba(255, 240, 160, 0)');
+        sctx.fillStyle = sunGrad;
+        sctx.fillRect(0, 0, 512, 512);
+
+        return sc;
+      }
+
+      const sunGroup = new THREE.Group();
+      sunGroup.position.copy(SUN_POS);
+
+      const sunDiskTex = new THREE.CanvasTexture(createNoonSunTexture());
+      const sunMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(3.8, 32, 32),
+        new THREE.MeshBasicMaterial({
+          map: sunDiskTex,
+          color: 0xffffff
+        })
+      );
+      sunGroup.add(sunMesh);
+
+      // Radiant daytime sunburst corona flare
+      const noonCoronaCanvas = document.createElement('canvas');
+      noonCoronaCanvas.width = 256;
+      noonCoronaCanvas.height = 256;
+      const cctx = noonCoronaCanvas.getContext('2d');
+      const cgrad = cctx.createRadialGradient(128, 128, 20, 128, 128, 128);
+      cgrad.addColorStop(0.00, 'rgba(255, 255, 255, 0.95)');
+      cgrad.addColorStop(0.35, 'rgba(255, 250, 220, 0.45)');
+      cgrad.addColorStop(0.70, 'rgba(235, 248, 255, 0.15)');
+      cgrad.addColorStop(1.00, 'rgba(220, 240, 255, 0)');
+      cctx.fillStyle = cgrad;
+      cctx.fillRect(0, 0, 256, 256);
+
+      const noonCoronaTex = new THREE.CanvasTexture(noonCoronaCanvas);
+      const sunCorona = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: noonCoronaTex,
+          color: 0xffffff,
+          blending: THREE.AdditiveBlending,
+          transparent: true,
+          opacity: 0.95
+        })
+      );
+      sunCorona.scale.set(34, 34, 1);
+      sunGroup.add(sunCorona);
+      scene.add(sunGroup);
+
+      // ── 3D Tropical Azure Ocean Surface in Daylight ───
+      const oceanW = 160, oceanD = 90;
+      const oceanGeo = new THREE.PlaneGeometry(oceanW, oceanD, 64, 40);
+      oceanGeo.rotateX(-Math.PI / 2);
+
+      const oceanMat = new THREE.MeshStandardMaterial({
+        color: 0x00588e, // Mediterranean / tropical azure blue
+        roughness: 0.07,
+        metalness: 0.14,
+        transparent: true,
+        opacity: 0.94,
+        flatShading: true
+      });
+      const oceanMesh = new THREE.Mesh(oceanGeo, oceanMat);
+      oceanMesh.position.y = 0;
+      scene.add(oceanMesh);
+
+      // Deep water floor for depth
+      const deepWater = new THREE.Mesh(
+        new THREE.PlaneGeometry(oceanW, oceanD),
+        new THREE.MeshBasicMaterial({ color: 0x00244c })
+      );
+      deepWater.rotateX(-Math.PI / 2);
+      deepWater.position.y = -0.55;
+      scene.add(deepWater);
+
+      // Wake foam group (crisp white sea foam in the sun)
+      const wakeGroup = new THREE.Group();
+      scene.add(wakeGroup);
+      const wakePlanes = [];
+      for (let i = 0; i < 18; i++) {
+        const wp = new THREE.Mesh(
+          new THREE.RingGeometry(0.25, 1.6, 16),
+          new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0,
+            side: THREE.DoubleSide
+          })
+        );
+        wp.rotateX(-Math.PI / 2);
+        wp.position.y = 0.04;
+        wp.visible = false;
+        wakeGroup.add(wp);
+        wakePlanes.push({ mesh: wp, age: 0, maxAge: 2.2, active: false });
+      }
+
+      function spawnWake(x, z, scale = 1) {
+        const slot = wakePlanes.find(w => !w.active);
+        if (!slot) return;
+        slot.active = true;
+        slot.age = 0;
+        slot.mesh.position.set(x, 0.04, z);
+        slot.mesh.scale.set(scale, scale, scale);
+        slot.mesh.visible = true;
+        slot.mesh.material.opacity = 0.55;
+      }
+
+      function updateWakes(dt) {
+        wakePlanes.forEach(w => {
+          if (!w.active) return;
+          w.age += dt;
+          const progress = w.age / w.maxAge;
+          if (progress >= 1) {
+            w.active = false;
+            w.mesh.visible = false;
+          } else {
+            const sc = 1 + progress * 2.6;
+            w.mesh.scale.set(sc, sc, sc);
+            w.mesh.material.opacity = (1 - progress) * 0.55;
+          }
+        });
+      }
+
+      // ── Build Realistic 3D Yacht Model (Facing Left!) ──
+      function buildRealisticYacht() {
+        const yacht = new THREE.Group();
+
+        // High quality daylight marine materials
+        const whiteGelcoat = new THREE.MeshStandardMaterial({
+          color: 0xfbfdff,
+          roughness: 0.12,
+          metalness: 0.16
+        });
+        const navyGelcoat = new THREE.MeshStandardMaterial({
+          color: 0x081932,
+          roughness: 0.20,
+          metalness: 0.35
+        });
+        const goldAccent = new THREE.MeshStandardMaterial({
+          color: 0xe2b650,
+          roughness: 0.20,
+          metalness: 0.88
+        });
+        const teakPlanks = new THREE.MeshStandardMaterial({
+          color: 0xa8703c,
+          roughness: 0.65,
+          metalness: 0.04
+        });
+        const darkTeakTrim = new THREE.MeshStandardMaterial({
+          color: 0x4e2e16,
+          roughness: 0.70
+        });
+        const polishedChrome = new THREE.MeshStandardMaterial({
+          color: 0xf0f4f8,
+          roughness: 0.06,
+          metalness: 0.98
+        });
+        const tintedGlass = new THREE.MeshPhysicalMaterial({
+          color: 0x184260,
+          transparent: true,
+          opacity: 0.42,
+          roughness: 0.04,
+          metalness: 0.20,
+          transmission: 0.58
+        });
+        const leatherWhite = new THREE.MeshStandardMaterial({
+          color: 0xf2f4f8,
+          roughness: 0.45
+        });
+        const leatherNavy = new THREE.MeshStandardMaterial({
+          color: 0x112138,
+          roughness: 0.52
+        });
+        const helmDash = new THREE.MeshStandardMaterial({
+          color: 0x151922,
+          roughness: 0.30
+        });
+        const screenGlow = new THREE.MeshBasicMaterial({
+          color: 0x00e5ff
+        });
+        const underwaterLed = new THREE.MeshBasicMaterial({
+          color: 0x00f5ff
+        });
+
+        // 1. Lower Hull (Midnight Navy Deep-V, Bow at -X, Stern at +X)
+        const lowerHull = new THREE.Mesh(
+          new THREE.CylinderGeometry(2.2, 3.2, 18.5, 24),
+          navyGelcoat
+        );
+        lowerHull.rotation.z = Math.PI / 2;
+        lowerHull.scale.set(0.68, 1, 0.46);
+        lowerHull.position.set(0, -0.4, 0);
+        lowerHull.castShadow = true;
+        yacht.add(lowerHull);
+
+        // Lower Bow Forefoot (Sharp entry pointing LEFT towards -X)
+        const bowForefoot = new THREE.Mesh(
+          new THREE.ConeGeometry(2.8, 4.8, 18),
+          navyGelcoat
+        );
+        bowForefoot.rotation.z = Math.PI / 2; // Point cone tip to -X
+        bowForefoot.scale.set(0.55, 1, 0.42);
+        bowForefoot.position.set(-11.2, -0.32, 0);
+        yacht.add(bowForefoot);
+
+        // 2. Upper Hull & Topsides (Brilliant Pearl White, Bow at -X)
+        const upperHull = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.3, 3.5, 18.2, 24),
+          whiteGelcoat
+        );
+        upperHull.rotation.z = Math.PI / 2;
+        upperHull.scale.set(0.62, 1, 0.52);
+        upperHull.position.set(0, 1.15, 0);
+        upperHull.castShadow = true;
+        yacht.add(upperHull);
+
+        // Swept Bow Prow (Raked forward yacht bow pointing LEFT to -X)
+        const bowProw = new THREE.Mesh(
+          new THREE.ConeGeometry(3.4, 6.2, 20),
+          whiteGelcoat
+        );
+        bowProw.rotation.z = Math.PI / 2; // Point cone tip to -X
+        bowProw.scale.set(0.56, 1, 0.48);
+        bowProw.position.set(-11.8, 1.18, 0);
+        yacht.add(bowProw);
+
+        // Stainless Steel Bow Stem Iron
+        const bowStemIron = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.06, 0.06, 3.2, 8),
+          polishedChrome
+        );
+        bowStemIron.rotation.z = 0.42;
+        bowStemIron.position.set(-14.8, 1.1, 0);
+        yacht.add(bowStemIron);
+
+        // 3. Waterline Boot Stripes (Navy + 24K Gold Pinstripe)
+        const bootStripeNavy = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.42, 3.42, 18.0, 24),
+          navyGelcoat
+        );
+        bootStripeNavy.rotation.z = Math.PI / 2;
+        bootStripeNavy.scale.set(0.63, 0.12, 0.53);
+        bootStripeNavy.position.set(0, 0.35, 0);
+        yacht.add(bootStripeNavy);
+
+        const bootStripeGold = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.46, 3.46, 18.2, 24),
+          goldAccent
+        );
+        bootStripeGold.rotation.z = Math.PI / 2;
+        bootStripeGold.scale.set(0.63, 0.035, 0.53);
+        bootStripeGold.position.set(0, 0.52, 0);
+        yacht.add(bootStripeGold);
+
+        // 4. Hull Panoramic Windows (Port & Starboard)
+        [-1, 1].forEach(side => {
+          const win = new THREE.Mesh(
+            new THREE.BoxGeometry(7.2, 0.5, 0.12),
+            tintedGlass
+          );
+          win.position.set(-2.2, 1.35, side * 1.78);
+          yacht.add(win);
+
+          const winFrame = new THREE.Mesh(
+            new THREE.BoxGeometry(7.35, 0.58, 0.06),
+            polishedChrome
+          );
+          winFrame.position.set(-2.2, 1.35, side * 1.76);
+          yacht.add(winFrame);
+        });
+
+        // 5. Teak Main Deck & Foredeck (Foredeck towards -X, Aft towards +X)
+        const mainDeck = new THREE.Mesh(
+          new THREE.BoxGeometry(18.0, 0.28, 3.4),
+          teakPlanks
+        );
+        mainDeck.position.set(-0.2, 2.08, 0);
+        mainDeck.receiveShadow = true;
+        yacht.add(mainDeck);
+
+        const bowDeckInfill = new THREE.Mesh(
+          new THREE.ConeGeometry(1.7, 5.2, 16),
+          teakPlanks
+        );
+        bowDeckInfill.rotation.z = Math.PI / 2; // Point cone tip to -X
+        bowDeckInfill.scale.set(0.08, 1, 0.95);
+        bowDeckInfill.position.set(-11.2, 2.08, 0);
+        yacht.add(bowDeckInfill);
+
+        // Flush Deck Escape Hatches (Foredeck, left side)
+        [-6.8, -9.2].forEach(hx => {
+          const hatch = new THREE.Mesh(
+            new THREE.BoxGeometry(1.1, 0.08, 1.1),
+            tintedGlass
+          );
+          hatch.position.set(hx, 2.16, 0);
+          yacht.add(hatch);
+          const hFrame = new THREE.Mesh(
+            new THREE.BoxGeometry(1.22, 0.06, 1.22),
+            polishedChrome
+          );
+          hFrame.position.set(hx, 2.15, 0);
+          yacht.add(hFrame);
+        });
+
+        // 6. Luxury Foredeck Sunpad (Forward on Bow, left side)
+        const sunpadBase = new THREE.Mesh(
+          new THREE.BoxGeometry(4.2, 0.24, 2.3),
+          leatherWhite
+        );
+        sunpadBase.position.set(-4.0, 2.24, 0);
+        yacht.add(sunpadBase);
+
+        const sunpadHeadrest = new THREE.Mesh(
+          new THREE.BoxGeometry(1.1, 0.34, 2.2),
+          leatherNavy
+        );
+        sunpadHeadrest.position.set(-2.4, 2.32, 0);
+        yacht.add(sunpadHeadrest);
+
+        // 7. Bow Pulpit Stainless Railings & Anchor Gear (at front -X)
+        const pulpitRail = new THREE.Mesh(
+          new THREE.TorusGeometry(1.8, 0.045, 8, 20, Math.PI),
+          polishedChrome
+        );
+        pulpitRail.rotation.x = Math.PI / 2;
+        pulpitRail.rotation.z = -Math.PI / 2; // Open toward stern
+        pulpitRail.position.set(-13.6, 2.65, 0);
+        yacht.add(pulpitRail);
+
+        [-1, 1].forEach(side => {
+          [4, 1, -2, -5, -8, -11].forEach(sx => {
+            const stanchion = new THREE.Mesh(
+              new THREE.CylinderGeometry(0.035, 0.035, 0.65, 6),
+              polishedChrome
+            );
+            stanchion.position.set(sx, 2.42, side * 1.68);
+            yacht.add(stanchion);
+          });
+          const lifeline = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.02, 0.02, 15.5, 6),
+            polishedChrome
+          );
+          lifeline.rotation.z = Math.PI / 2;
+          lifeline.position.set(-3.5, 2.72, side * 1.68);
+          yacht.add(lifeline);
+        });
+
+        const anchorRoller = new THREE.Mesh(
+          new THREE.BoxGeometry(1.2, 0.15, 0.3),
+          polishedChrome
+        );
+        anchorRoller.position.set(-14.4, 2.15, 0);
+        yacht.add(anchorRoller);
+
+        const deltaAnchor = new THREE.Mesh(
+          new THREE.ConeGeometry(0.35, 0.8, 4),
+          polishedChrome
+        );
+        deltaAnchor.rotation.x = Math.PI / 4;
+        deltaAnchor.rotation.z = Math.PI / 2;
+        deltaAnchor.position.set(-14.8, 1.85, 0);
+        yacht.add(deltaAnchor);
+
+        const windlass = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.24, 0.28, 0.35, 12),
+          polishedChrome
+        );
+        windlass.position.set(-12.8, 2.25, 0);
+        yacht.add(windlass);
+
+        // 8. Cockpit Lounge (Mid-Aft, right side)
+        const cockpitCoaming = new THREE.Mesh(
+          new THREE.BoxGeometry(7.2, 0.9, 3.2),
+          whiteGelcoat
+        );
+        cockpitCoaming.position.set(3.2, 2.42, 0);
+        yacht.add(cockpitCoaming);
+
+        const cockpitFloor = new THREE.Mesh(
+          new THREE.BoxGeometry(6.6, 0.1, 2.9),
+          teakPlanks
+        );
+        cockpitFloor.position.set(3.2, 2.04, 0);
+        yacht.add(cockpitFloor);
+
+        const loungeRear = new THREE.Mesh(
+          new THREE.BoxGeometry(1.2, 0.45, 2.7),
+          leatherWhite
+        );
+        loungeRear.position.set(6.0, 2.32, 0);
+        yacht.add(loungeRear);
+
+        const loungePort = new THREE.Mesh(
+          new THREE.BoxGeometry(3.6, 0.45, 0.8),
+          leatherWhite
+        );
+        loungePort.position.set(4.2, 2.32, 1.0);
+        yacht.add(loungePort);
+
+        const tableTop = new THREE.Mesh(
+          new THREE.BoxGeometry(1.8, 0.08, 1.2),
+          teakPlanks
+        );
+        tableTop.position.set(4.2, 2.46, 0.1);
+        yacht.add(tableTop);
+        const tablePedestal = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.06, 0.06, 0.42, 8),
+          polishedChrome
+        );
+        tablePedestal.position.set(4.2, 2.22, 0.1);
+        yacht.add(tablePedestal);
+
+        // 9. Modern Helm Station & Console (Facing LEFT forward!)
+        const helmConsole = new THREE.Mesh(
+          new THREE.BoxGeometry(1.4, 0.85, 2.2),
+          helmDash
+        );
+        helmConsole.position.set(0.2, 2.62, 0);
+        yacht.add(helmConsole);
+
+        [-0.5, 0.5].forEach(dy => {
+          const mfd = new THREE.Mesh(
+            new THREE.BoxGeometry(0.04, 0.32, 0.55),
+            screenGlow
+          );
+          mfd.rotation.z = 0.3;
+          mfd.position.set(0.85, 2.82, dy);
+          yacht.add(mfd);
+        });
+
+        const wheelRim = new THREE.Mesh(
+          new THREE.TorusGeometry(0.24, 0.035, 8, 18),
+          polishedChrome
+        );
+        wheelRim.rotation.y = Math.PI / 2;
+        wheelRim.rotation.z = 0.35;
+        wheelRim.position.set(0.95, 2.74, 0.45);
+        yacht.add(wheelRim);
+
+        [-0.5, 0.5].forEach(side => {
+          const seatBase = new THREE.Mesh(
+            new THREE.BoxGeometry(0.85, 0.4, 0.75),
+            leatherWhite
+          );
+          seatBase.position.set(1.8, 2.35, side);
+          yacht.add(seatBase);
+
+          const seatBack = new THREE.Mesh(
+            new THREE.BoxGeometry(0.22, 0.75, 0.72),
+            leatherNavy
+          );
+          seatBack.position.set(2.2, 2.72, side);
+          yacht.add(seatBack);
+        });
+
+        // 10. Windshield (Raked aerodynamically backward to +X)
+        const windshield = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 1.35, 3.1),
+          tintedGlass
+        );
+        windshield.rotation.z = 0.52; // Rake toward stern (+X)
+        windshield.position.set(-0.68, 3.02, 0);
+        yacht.add(windshield);
+
+        [-1, 1].forEach(side => {
+          const sideWing = new THREE.Mesh(
+            new THREE.BoxGeometry(1.6, 0.8, 0.08),
+            tintedGlass
+          );
+          sideWing.position.set(0.15, 2.85, side * 1.55);
+          yacht.add(sideWing);
+        });
+
+        const windshieldHeader = new THREE.Mesh(
+          new THREE.BoxGeometry(0.15, 0.08, 3.16),
+          polishedChrome
+        );
+        windshieldHeader.rotation.z = 0.52;
+        windshieldHeader.position.set(-0.38, 3.52, 0);
+        yacht.add(windshieldHeader);
+
+        // 11. Sculpted Composite Sport T-Top / Hardtop
+        const hardtop = new THREE.Mesh(
+          new THREE.BoxGeometry(4.8, 0.22, 3.2),
+          whiteGelcoat
+        );
+        hardtop.position.set(1.4, 4.45, 0);
+        hardtop.castShadow = true;
+        yacht.add(hardtop);
+
+        [-1, 1].forEach(side => {
+          const pillarFwd = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.08, 0.08, 2.1, 8),
+            polishedChrome
+          );
+          pillarFwd.rotation.z = -0.28;
+          pillarFwd.position.set(-0.1, 3.6, side * 1.52);
+          yacht.add(pillarFwd);
+
+          const pillarAft = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.08, 0.08, 2.1, 8),
+            polishedChrome
+          );
+          pillarAft.rotation.z = 0.22;
+          pillarAft.position.set(2.8, 3.6, side * 1.52);
+          yacht.add(pillarAft);
+        });
+
+        const cockpitCeilingLight = new THREE.PointLight(0xffecc0, 1.6, 7.5);
+        cockpitCeilingLight.position.set(1.4, 4.25, 0);
+        yacht.add(cockpitCeilingLight);
+
+        // Roof Navigation Electronics
+        const radome = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.65, 0.65, 0.35, 18),
+          whiteGelcoat
+        );
+        radome.position.set(1.4, 4.75, 0);
+        yacht.add(radome);
+        const radomeBand = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.66, 0.66, 0.08, 18),
+          navyGelcoat
+        );
+        radomeBand.position.set(1.4, 4.75, 0);
+        yacht.add(radomeBand);
+
+        [-0.8, 0.8].forEach(dy => {
+          const antenna = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.02, 0.035, 2.8, 6),
+            polishedChrome
+          );
+          antenna.rotation.z = -0.25; // Rake toward stern (+X)
+          antenna.position.set(2.4, 5.6, dy);
+          yacht.add(antenna);
+        });
+
+        const anchorMast = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.03, 0.03, 0.9, 6),
+          polishedChrome
+        );
+        anchorMast.position.set(1.4, 5.25, 0);
+        yacht.add(anchorMast);
+        const anchorLightBulb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.09, 8, 8),
+          new THREE.MeshBasicMaterial({ color: 0xffffff })
+        );
+        anchorLightBulb.position.set(1.4, 5.72, 0);
+        yacht.add(anchorLightBulb);
+        const anchorLightPoint = new THREE.PointLight(0xffffff, 0.8, 8);
+        anchorLightPoint.position.set(1.4, 5.72, 0);
+        yacht.add(anchorLightPoint);
+
+        const portNavLight = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 0.1, 0.08),
+          new THREE.MeshBasicMaterial({ color: 0xff2233 })
+        );
+        portNavLight.position.set(0.2, 4.5, 1.62);
+        yacht.add(portNavLight);
+        const portLightPoint = new THREE.PointLight(0xff2233, 0.7, 4.5);
+        portLightPoint.position.set(0.2, 4.5, 1.62);
+        yacht.add(portLightPoint);
+
+        const stbdNavLight = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 0.1, 0.08),
+          new THREE.MeshBasicMaterial({ color: 0x00ff66 })
+        );
+        stbdNavLight.position.set(0.2, 4.5, -1.62);
+        yacht.add(stbdNavLight);
+        const stbdLightPoint = new THREE.PointLight(0x00ff66, 0.7, 4.5);
+        stbdLightPoint.position.set(0.2, 4.5, -1.62);
+        yacht.add(stbdLightPoint);
+
+        // 12. Aft Beach Club / Extended Teak Swim Platform (At Stern, on the Right +X)
+        const swimPlatform = new THREE.Mesh(
+          new THREE.BoxGeometry(2.8, 0.22, 3.8),
+          teakPlanks
+        );
+        swimPlatform.position.set(9.8, 0.95, 0);
+        yacht.add(swimPlatform);
+
+        const transomStairs = new THREE.Mesh(
+          new THREE.BoxGeometry(1.4, 0.6, 2.8),
+          teakPlanks
+        );
+        transomStairs.position.set(8.0, 1.35, 0);
+        yacht.add(transomStairs);
+
+        [-1, 1].forEach(side => {
+          const grabRail = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.04, 0.04, 1.1, 8),
+            polishedChrome
+          );
+          grabRail.position.set(9.2, 1.6, side * 1.8);
+          yacht.add(grabRail);
+        });
+
+        // 13. DIVING BOARD / SPRINGBOARD (Forward at the Bow, facing LEFT over open water!)
+        const diveBoardGroup = new THREE.Group();
+        diveBoardGroup.position.set(-10.2, 2.15, 0.85);
+
+        const divePlank = new THREE.Mesh(
+          new THREE.BoxGeometry(3.6, 0.14, 0.95),
+          teakPlanks
+        );
+        // Extends forward towards -X
+        divePlank.position.set(-1.4, 0, 0);
+        diveBoardGroup.add(divePlank);
+
+        const divePlankTrim = new THREE.Mesh(
+          new THREE.BoxGeometry(3.64, 0.16, 0.98),
+          darkTeakTrim
+        );
+        divePlankTrim.position.set(-1.4, -0.02, 0);
+        diveBoardGroup.add(divePlankTrim);
+
+        const diveBracket1 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.05, 0.05, 0.65, 8),
+          polishedChrome
+        );
+        diveBracket1.rotation.z = -0.4;
+        diveBracket1.position.set(-0.8, -0.28, 0);
+        diveBoardGroup.add(diveBracket1);
+
+        const diveTipGlow = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 0.08, 0.95),
+          screenGlow
+        );
+        diveTipGlow.position.set(-3.2, 0.02, 0);
+        diveBoardGroup.add(diveTipGlow);
+
+        yacht.add(diveBoardGroup);
+
+        // 14. Transom Underwater Aqua Neon Spotlights (At Stern on +X)
+        const underwaterLamp1 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.18, 0.18, 0.08, 12),
+          underwaterLed
+        );
+        underwaterLamp1.rotation.z = Math.PI / 2;
+        underwaterLamp1.position.set(10.6, 0.45, 0.9);
+        yacht.add(underwaterLamp1);
+
+        const underwaterLamp2 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.18, 0.18, 0.08, 12),
+          underwaterLed
+        );
+        underwaterLamp2.rotation.z = Math.PI / 2;
+        underwaterLamp2.position.set(10.6, 0.45, -0.9);
+        yacht.add(underwaterLamp2);
+
+        const underwaterLight = new THREE.PointLight(0x00f0ff, 2.8, 11);
+        underwaterLight.position.set(11.2, 0.3, 0);
+        yacht.add(underwaterLight);
+
+        // 15. Twin High-Performance Outboard Motors (At Stern on +X)
+        [-1.1, -0.1].forEach(zPos => {
+          const outboardGroup = new THREE.Group();
+          outboardGroup.position.set(10.8, 0.65, zPos);
+
+          const cowling = new THREE.Mesh(
+            new THREE.BoxGeometry(1.2, 1.4, 0.65),
+            whiteGelcoat
+          );
+          cowling.position.set(0, 0.25, 0);
+          outboardGroup.add(cowling);
+
+          const engStripe = new THREE.Mesh(
+            new THREE.BoxGeometry(1.22, 0.28, 0.66),
+            navyGelcoat
+          );
+          engStripe.position.set(0, 0.35, 0);
+          outboardGroup.add(engStripe);
+
+          const driveUnit = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.18, 0.14, 0.95, 8),
+            polishedChrome
+          );
+          driveUnit.position.set(0, -0.65, 0);
+          outboardGroup.add(driveUnit);
+
+          const propHub = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.12, 0.12, 0.2, 8),
+            polishedChrome
+          );
+          propHub.rotation.z = Math.PI / 2;
+          propHub.position.set(0.35, -0.85, 0);
+          outboardGroup.add(propHub);
+
+          yacht.add(outboardGroup);
+        });
+
+        return {
+          group: yacht,
+          diveBoard: diveBoardGroup,
+          underwaterLight
+        };
+      }
+
+      const yachtObj = buildRealisticYacht();
+      const yacht = yachtObj.group;
+      const diveBoard = yachtObj.diveBoard;
+
+      // Scale yacht slightly smaller as requested for a realistic little luxury yacht
+      const YACHT_SCALE = 0.70;
+      yacht.scale.setScalar(YACHT_SCALE);
+      yacht.rotation.y = -0.10;
+      scene.add(yacht);
+
+      // ── Diver (`diver copy.glb`) Setup ─────────────────
+      let diverRoot = null;
+      let diverHolder = new THREE.Group();
+      scene.add(diverHolder);
+
+      let diverMixer = null;
+      let diveClip = null;
+      let diverLoaded = false;
+
+      // Local coordinate on the diving board where the diver stands firmly
+      const boardLocalTip = new THREE.Vector3(-2.8, 0.12, 0);
+
+      const loader = new GLTFLoader();
+      loader.load(
+        'diver copy.glb',
+        (gltf) => {
+          diverRoot = gltf.scene;
+
+          // Normalize bounding box & size diver to fit realistic little yacht scale
+          const box = new THREE.Box3().setFromObject(diverRoot);
+          const sz = box.getSize(new THREE.Vector3());
+
+          // Realistic human height relative to yacht (~1.40 units)
+          const targetHeight = 1.40;
+          const scale = targetHeight / sz.y;
+          diverRoot.scale.setScalar(scale);
+
+          // Center pivot at feet so bottom of boots is at y = 0
+          const scaledBox = new THREE.Box3().setFromObject(diverRoot);
+          diverRoot.position.set(
+            -(scaledBox.min.x + scaledBox.max.x) * 0.5,
+            -scaledBox.min.y,
+            -(scaledBox.min.z + scaledBox.max.z) * 0.5
+          );
+
+          // Diver stands completely straight in natural un-animated rest pose facing the sea (-X)
+          diverRoot.rotation.set(0, -Math.PI / 2, 0);
+
+          diverRoot.traverse(child => {
+            if (child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+              if (child.material) {
+                child.material.roughness = 0.35;
+              }
+            }
+          });
+
+          // Animation setup (prepared, but NOT played while standing on the boat!)
+          if (gltf.animations && gltf.animations.length) {
+            diverMixer = new THREE.AnimationMixer(diverRoot);
+            diveClip = gltf.animations.find(a => a.name === 'FrogKick_Dive')
+                    || gltf.animations.find(a => a.name.toLowerCase().includes('dive'))
+                    || gltf.animations[0];
+          }
+
+          diverHolder.add(diverRoot);
+          diverLoaded = true;
+        },
+        undefined,
+        err => console.warn('diver copy.glb intro load warning:', err)
+      );
+
+      // ── 3D Water Splash & Foam Simulation ──────────────
+      const splashGroup = new THREE.Group();
+      scene.add(splashGroup);
+
+      const splashParticles = [];
+      const splashDropletGeo = new THREE.SphereGeometry(0.10, 6, 6);
+      const splashDropletMat = new THREE.MeshBasicMaterial({
+        color: 0xd2f4ff,
+        transparent: true,
+        opacity: 0.85
+      });
+
+      for (let i = 0; i < 75; i++) {
+        const drop = new THREE.Mesh(splashDropletGeo, splashDropletMat.clone());
+        drop.visible = false;
+        splashGroup.add(drop);
+        splashParticles.push({
+          mesh: drop,
+          pos: new THREE.Vector3(),
+          vel: new THREE.Vector3(),
+          active: false,
+          life: 0,
+          maxLife: 1
+        });
+      }
+
+      // Splash rings on water
+      const splashRings = [];
+      for (let i = 0; i < 4; i++) {
+        const ring = new THREE.Mesh(
+          new THREE.RingGeometry(0.25, 0.65, 24),
+          new THREE.MeshBasicMaterial({
+            color: 0xe5f8ff,
+            transparent: true,
+            opacity: 0,
+            side: THREE.DoubleSide
+          })
+        );
+        ring.rotateX(-Math.PI / 2);
+        ring.position.y = 0.06;
+        ring.visible = false;
+        splashGroup.add(ring);
+        splashRings.push({ mesh: ring, radius: 0.35, maxRadius: 3.5, opacity: 0, active: false });
+      }
+
+      function triggerWaterSplash(impactPos) {
+        splashParticles.forEach((sp) => {
+          sp.active = true;
+          sp.life = 0;
+          sp.maxLife = 0.72 + Math.random() * 0.52;
+          sp.pos.copy(impactPos);
+          sp.pos.y = 0.08;
+
+          const angle = Math.random() * Math.PI * 2;
+          const spread = Math.random() * 3.4 + 1.0;
+          const upSpeed = Math.random() * 5.8 + 3.4;
+          sp.vel.set(Math.cos(angle) * spread, upSpeed, Math.sin(angle) * spread);
+
+          sp.mesh.visible = true;
+          sp.mesh.scale.setScalar(0.7 + Math.random() * 0.7);
+          sp.mesh.material.opacity = 0.9;
+        });
+
+        splashRings.forEach((r, idx) => {
+          r.active = true;
+          r.radius = 0.25 + idx * 0.18;
+          r.maxRadius = 3.2 + idx * 0.7;
+          r.opacity = 0.85;
+          r.mesh.position.set(impactPos.x, 0.05 + idx * 0.01, impactPos.z);
+          r.mesh.visible = true;
+        });
+      }
+
+      function updateSplash(dt) {
+        splashParticles.forEach(sp => {
+          if (!sp.active) return;
+          sp.life += dt;
+          if (sp.life >= sp.maxLife) {
+            sp.active = false;
+            sp.mesh.visible = false;
+            return;
+          }
+          sp.vel.y -= 13.5 * dt; // Gravity
+          sp.pos.addScaledVector(sp.vel, dt);
+          sp.mesh.position.copy(sp.pos);
+
+          const progress = sp.life / sp.maxLife;
+          sp.mesh.material.opacity = (1 - progress) * 0.85;
+          const sc = Math.max(0.1, 1 - progress * 0.6);
+          sp.mesh.scale.setScalar(sc);
+        });
+
+        splashRings.forEach(r => {
+          if (!r.active) return;
+          r.radius += dt * 3.0;
+          r.opacity -= dt * 0.85;
+          if (r.opacity <= 0 || r.radius >= r.maxRadius) {
+            r.active = false;
+            r.mesh.visible = false;
+          } else {
+            const sc = r.radius;
+            r.mesh.scale.set(sc, sc, sc);
+            r.mesh.material.opacity = r.opacity;
+          }
+        });
+      }
+
+      // ── Intro State Machine ───────────────────────────
+      let phase = 0;
+      let boatX = 35.0;          // start off-screen right
+      const BOAT_REST_X = 3.6;   // resting position slightly right of center
+      let boatSpeed = 0;
+      let diveLaunched = false;
+      let introReady = false;
+
+      // Diver physical trajectory parameters
+      const diverPhysics = {
+        pos: new THREE.Vector3(),
+        vel: new THREE.Vector3(),
+        rotX: 0,
+        rotY: -Math.PI / 2,
+        rotZ: 0,
+        pitchSpeed: 2.3,
+        gravity: -9.8,
+        inAir: false,
+        plunged: false,
+        diveTime: 0
+      };
+
+      // Board spring recoil
+      let boardFlex = 0;
+      let boardFlexVel = 0;
+
+      // ── Launch Diver Trigger ──────────────────────────
+      function launchDiver() {
+        if (diveLaunched) return;
+        diveLaunched = true;
+
+        if (phase === 0) {
+          boatX = BOAT_REST_X;
+          yacht.position.x = boatX;
+          phase = 1;
+        }
+
+        const nameCard = document.getElementById('intro-name');
+        const diveHint = document.getElementById('dive-hint');
+        if (nameCard) nameCard.classList.remove('show');
+        if (diveHint) diveHint.classList.remove('show');
+
+        // Calculate world coordinates of the diver's launch position on the diving board
+        const launchWorldPos = new THREE.Vector3();
+        diveBoard.localToWorld(launchWorldPos.copy(boardLocalTip));
+
+        diverPhysics.pos.copy(launchWorldPos);
+        // Realistic jump velocity: leaping upward and forward into open ocean (-X direction)
+        diverPhysics.vel.set(-3.4, 3.8, 0.3);
+        diverPhysics.rotX = 0;
+        diverPhysics.rotY = -Math.PI / 2;
+        diverPhysics.rotZ = 0;
+        diverPhysics.inAir = true;
+        diverPhysics.plunged = false;
+        diverPhysics.diveTime = 0;
+
+        // Spring board recoil impulse
+        boardFlex = -0.28;
+        boardFlexVel = 2.0;
+
+        // Start dive skeletal animation now on jump!
+        if (diverMixer && diveClip) {
+          const action = diverMixer.clipAction(diveClip);
+          action.reset();
+          action.play();
+        }
+
+        phase = 2;
+      }
+
+      window._introLaunchDiver = launchDiver;
+
+      // ── Render Loop ───────────────────────────────────
+      const clock = new THREE.Clock();
+      let waveTimer = 0;
+      let transitionFired = false;
+      let wakeTimer = 0;
+
+      function renderFrame() {
+        requestAnimationFrame(renderFrame);
+        const dt = Math.min(clock.getDelta(), 0.05);
+        waveTimer += dt;
+
+        // 1. Animate Ocean Waves
+        const posAttr = oceanGeo.attributes.position;
+        const count = posAttr.count;
+        for (let i = 0; i < count; i++) {
+          const vx = posAttr.getX(i);
+          const vz = posAttr.getZ(i);
+          const waveHeight =
+            Math.sin(vx * 0.14 + waveTimer * 1.6) * 0.20 +
+            Math.cos(vz * 0.18 + waveTimer * 1.2) * 0.16 +
+            Math.sin((vx + vz) * 0.08 + waveTimer * 0.9) * 0.12;
+          posAttr.setY(i, waveHeight);
+        }
+        posAttr.needsUpdate = true;
+
+        // 2. Animate Yacht Motion
+        const oceanHeave = Math.sin(waveTimer * 1.4) * 0.12;
+        const oceanRoll  = Math.sin(waveTimer * 1.1) * 0.020;
+        const oceanPitch = Math.cos(waveTimer * 1.3) * 0.014;
+
+        if (phase === 0) {
+          const distToRest = BOAT_REST_X - boatX;
+          boatSpeed = distToRest * 0.038;
+          if (boatX > BOAT_REST_X + 1.0 && boatSpeed > -0.05) {
+            boatSpeed = -0.05 - (boatX - BOAT_REST_X) * 0.026;
+          }
+          boatX += boatSpeed;
+
+          wakeTimer += dt;
+          if (wakeTimer > 0.14) {
+            wakeTimer = 0;
+            spawnWake(boatX - 11.0 * YACHT_SCALE, 0, 0.85);
+            spawnWake(boatX + 9.5 * YACHT_SCALE, 0, 1.15);
+          }
+
+          if (Math.abs(boatX - BOAT_REST_X) < 0.15) {
+            boatX = BOAT_REST_X;
+            phase = 1;
+            introReady = true;
+            const nameEl = document.getElementById('intro-name');
+            const hintEl = document.getElementById('dive-hint');
+            if (nameEl) nameEl.classList.add('show');
+            setTimeout(() => {
+              if (hintEl && !diveLaunched) hintEl.classList.add('show');
+            }, 600);
+          }
+        }
+
+        yacht.position.set(boatX, oceanHeave, 0);
+        yacht.rotation.z = oceanRoll;
+        yacht.rotation.x = oceanPitch;
+
+        // Diving board recoil spring physics
+        if (diveBoard) {
+          boardFlexVel += (-boardFlex * 24.0) * dt;
+          boardFlexVel *= Math.pow(0.88, dt * 60);
+          boardFlex += boardFlexVel * dt;
+          diveBoard.rotation.z = boardFlex;
+        }
+
+        // 3. Update Diver
+        if (diverRoot && diverLoaded) {
+          if (phase < 2) {
+            // Diver stands completely straight on the diving board tip
+            const boardWorldPos = new THREE.Vector3();
+            diveBoard.localToWorld(boardWorldPos.copy(boardLocalTip));
+
+            diverHolder.position.copy(boardWorldPos);
+            // Diver stands straight, tall, rocking gently with yacht's subtle heave and roll
+            diverHolder.rotation.set(oceanPitch, 0, oceanRoll + boardFlex * 0.4);
+            diverHolder.visible = true;
+
+            // Notice: diverMixer is NOT updated while standing, preserving the straight, upright rest pose!
+          } else if (phase === 2 && diverPhysics.inAir) {
+            // Airborne jump trajectory
+            diverPhysics.diveTime += dt;
+            diverPhysics.vel.y += diverPhysics.gravity * dt;
+            diverPhysics.pos.addScaledVector(diverPhysics.vel, dt);
+
+            // Progressive rotation into head-first streamline dive
+            diverPhysics.rotZ += diverPhysics.pitchSpeed * dt;
+            if (diverPhysics.vel.y < 0) {
+              diverPhysics.rotZ = Math.min(diverPhysics.rotZ, 1.95);
+            }
+
+            diverHolder.position.copy(diverPhysics.pos);
+            diverHolder.rotation.set(0, 0, diverPhysics.rotZ);
+
+            if (diverMixer) diverMixer.update(dt * 1.1);
+
+            // Water impact entry
+            if (diverPhysics.pos.y <= 0.08 && !diverPhysics.plunged) {
+              diverPhysics.plunged = true;
+              diverPhysics.inAir = false;
+              phase = 3;
+
+              triggerWaterSplash(diverPhysics.pos);
+
+              if (!transitionFired) {
+                transitionFired = true;
+                setTimeout(() => {
+                  if (typeof window.startDive === 'function') {
+                    window.startDive();
+                  }
+                }, 400);
+              }
+            }
+          } else if (phase === 3) {
+            // Submerged descent
+            diverPhysics.pos.y -= 2.6 * dt;
+            diverPhysics.pos.x += diverPhysics.vel.x * 0.3 * dt;
+            diverHolder.position.copy(diverPhysics.pos);
+            if (diverMixer) diverMixer.update(dt);
+          }
+        }
+
+        // 4. Update splash particles & foam wakes
+        updateSplash(dt);
+        updateWakes(dt);
+
+        // 5. Render Scene
+        renderer.render(scene, camera);
+      }
+
+      renderFrame();
     })();
 
-    /* ===================================================
-       WAVE ANIMATION (WELCOME)
-    =================================================== */
-    (function () {
-      const w1 = document.getElementById('wv1'), w2 = document.getElementById('wv2');
-      let t = 0;
-      function wave(amp, freq, ph, W, H) {
-        let d = `M 0 ${H}`;
-        for (let x = 0; x <= W; x += 5) {
-          const y = H * .5 + Math.sin((x / W * freq * Math.PI * 2) + ph) * amp + Math.sin((x / W * freq * 1.6 * Math.PI * 2) + ph * .7) * (amp * .35);
-          d += ` L ${x} ${y}`;
-        }
-        return d + ` L ${W} ${H} L 0 ${H} Z`;
-      }
-      function tick() {
-        t += .012;
-        w1.setAttribute('d', wave(22, 3, t, 1440, 110));
-        w2.setAttribute('d', wave(14, 2, t + 1.2, 1440, 110));
-        requestAnimationFrame(tick);
-      }
-      tick();
-    })();
 
     /* ===================================================
        OCEAN CANVAS ENGINE
@@ -2053,13 +3209,18 @@
        DIVE SEQUENCE
     =================================================== */
     let dived = false;
+    window.startDive = startDive;
     function startDive() {
       if (dived) return; dived = true;
       const ws = document.getElementById('ws'), pf = document.getElementById('pf');
-      document.getElementById('dbtn').style.background = 'rgba(0,229,255,.25)';
-      setTimeout(() => ws.classList.add('out'), 280);
+      // Fade out welcome screen
+      setTimeout(() => ws.classList.add('out'), 200);
       setTimeout(() => {
         ws.style.display = 'none';
+        // Scroll portfolio to hero (first content)
+        const hero = document.getElementById('hero');
+        if (hero) hero.scrollIntoView({ behavior: 'instant' });
+        window.scrollTo(0, 0);
         pf.classList.add('vis');
         updateDepth();
         setTimeout(() => {
@@ -2067,13 +3228,24 @@
             const r = el.getBoundingClientRect();
             if (r.top < window.innerHeight) el.classList.add('vis');
           });
-        }, 500);
-      }, 1480);
+        }, 400);
+      }, 1400);
     }
 
-    window.addEventListener('wheel', () => { if (!dived) startDive(); }, { passive: true, once: true });
-    window.addEventListener('touchstart', () => { if (!dived) startDive(); }, { passive: true, once: true });
-    window.addEventListener('keydown', e => { if (!dived && ['Enter', ' ', 'ArrowDown'].includes(e.key)) startDive(); });
+    // Input triggers — only fire if boat has arrived (introReady) and dive not yet launched
+    function triggerDive() {
+      if (dived) return;
+      if (window._introLaunchDiver) {
+        window._introLaunchDiver();
+      } else {
+        startDive(); // fallback
+      }
+    }
+
+    window.addEventListener('wheel',      () => triggerDive(), { passive: true, once: true });
+    window.addEventListener('touchstart', () => triggerDive(), { passive: true, once: true });
+    window.addEventListener('keydown',    () => triggerDive(), { once: true });
+    window.addEventListener('mousedown',  () => triggerDive(), { once: true });
 
     /* Start rendering immediately */
     draw();
@@ -2201,4 +3373,3 @@
 </body>
 
 </html>
->>>>>>> main
